@@ -31,4 +31,28 @@ export default {
 
 <style>
 /*每个页面公共css */
+@import "static/css/base.scss";
+@import "static/font/iconfont.css";
+
+::v-deep .uni-toast {
+  background-color: #fff !important;
+}
+
+::v-deep .uni-toast-text {
+  color: #323232 !important;
+}
+
+::v-deep .uni-toast__content {
+  color: #323232 !important;
+}
+
+::v-deep .uni-sample-toast {
+  background-color: #fff !important;
+  border-radius: 10rpx !important;
+}
+
+::v-deep .uni-simple-toast__text {
+  background-color: #fff !important;
+  color: #323232 !important;
+}
 </style>

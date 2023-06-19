@@ -1,0 +1,50 @@
+{
+  "easycom": {
+    //uView
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
+    // uni-ui
+    "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "绘雨AI",
+    "navigationBarBackgroundColor": "#000000",
+    "backgroundColor": "#000000"
+  },
+  "tabBar": {
+    "color": "#b3b3b3",
+    "selectedColor": "#F8D849",
+    "borderStyle": "white",
+    "backgroundColor": "#1A1A1A",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/tab_home.png",
+        "selectedIconPath": "static/images/tab_home_sel.png",
+        "text": "SD创作"
+      },
+      {
+        "pagePath": "pages/me/index",
+        "iconPath": "static/images/me.png",
+        "selectedIconPath": "static/images/me_fill.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "pages": [
+    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/me/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "enablePullDownRefresh": true
+      }
+    }
+  ]
+}
