@@ -19,8 +19,8 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "static/images/tab_home.png",
-        "selectedIconPath": "static/images/tab_home_sel.png",
+        "iconPath": "static/images/tab_draw.png",
+        "selectedIconPath": "static/images/tab_draw_sel.png",
         "text": "SD创作"
       },
       {
