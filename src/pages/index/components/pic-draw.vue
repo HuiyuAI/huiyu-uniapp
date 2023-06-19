@@ -1,14 +1,14 @@
 <template>
   <view class="com-pic-draw">
     <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'">
-      <!-- 提示词 -->
+      <!-- 正向描述词 -->
       <view class="input-item">
         <view class="section">
           <view class="title">画面描述</view>
-          <view class="title-en">(短语单词为佳，建议以推荐词为基础修改)</view>
+          <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="cueword" placeholder="输入你想要的内容,支持中英文,用逗号分割." :maxlength="maxinput"></textarea>
+          <textarea v-model="cueword" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
         </view>
         <view class="text-num-box">
           <view class="text-num">{{ cueword_num }}/{{ maxinput }}</view>
@@ -38,8 +38,7 @@
           <view class="ratio-list" v-for="(item,index) in sizeRatios" :key="index">
             <view class="ratio-item" :class="item.selected?'ratio-sel':''" @click="clickRatioChange(item,index)">
               <view class="item-shape-box">
-                <view class="item-shape" :style="'width:'+item.width+'px;height:'+item.height+'px;'">
-                </view>
+                <view class="item-shape" :style="'width:'+item.width+'px;height:'+item.height+'px;'"></view>
               </view>
               <view class="item-txt">{{ item.ratio }}</view>
             </view>
@@ -83,31 +82,31 @@
         <view class="submit-btn" v-else>再画一次</view>
       </view>
 
-      <!-- 反向提示词 -->
+      <!-- 反向描述词 -->
       <view class="input-item">
         <view class="section">
           <view class="title">我不要</view>
-          <view class="title-en">(负向描述词)</view>
+          <view class="title-desc">(负向描述词)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="reverse" placeholder="输入你不想要的内容,支持中英文,用逗号分割." :maxlength="maxinput"></textarea>
+          <textarea v-model="reverse" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
         </view>
         <view class="text-num-box">
           <view class="text-num">{{ reverse_num }}/{{ maxinput }}</view>
         </view>
       </view>
-      <!-- 提示词相关性 -->
+      <!-- 描述词相关度 -->
       <view class="box-content cueword-box">
-        <view class="item-section">提示词相关性</view>
+        <view class="item-section">描述词相关度</view>
         <view class="slier">
-          <slider :value="formData.cfg_scale" min="1" max="30" @change="cuewordSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
+          <slider :value="formData.cfg" min="3" max="15" @change="cuewordSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
         </view>
       </view>
-      <!-- 采样 -->
+      <!-- 采样步数 -->
       <view class="box-content cueword-box">
-        <view class="item-section">采样迭代步数</view>
+        <view class="item-section">采样步数</view>
         <view class="slier">
-          <slider :value="formData.steps" min="1" max="150" @change="sampleSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
+          <slider :value="formData.steps" min="10" max="30" @change="sampleSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
         </view>
       </view>
       <!-- 随机种子 -->
@@ -140,19 +139,19 @@ export default {
       reverse: '',
       seed_num: '',
       formData: {
-        seed: -1,
+        modelId: 1,
+        size: 1,
         prompt: "",
-        negative_prompt: "",
-        sd_model_hash: "",
-        cfg_scale: 7,
-        steps: 20,
+        negativePrompt: "",
         count: 1,
+        cfg: 7,
+        steps: 20,
+        seed: -1,
       },
-      maxinput: 1000,
+      maxinput: 500,
       cueword_num: 0,
       reverse_num: 0,
       models: [],
-      samplers: [],
       sizeRatios: [
         {
           ratio: '1:1',
@@ -287,7 +286,7 @@ export default {
      * 提示词相关性改变
      */
     cuewordSliderChange(e) {
-      this.formData.cfg_scale = e.detail.value;
+      this.formData.cfg = e.detail.value;
     },
     /**
      * 采样迭代步数改变
@@ -337,7 +336,7 @@ export default {
 
       this.formData.prompt = this.cueword + ",<lora:loraName:1.0>";
       // 反向提示语处理
-      this.formData.negative_prompt = this.reverse + ",nsfw,jinpingxi,xijinping";
+      this.formData.negativePrompt = this.reverse + ",nsfw,jinpingxi,xijinping";
 
       this.isBusying = true;
       uni.showLoading({
@@ -432,7 +431,7 @@ export default {
       margin-right: 8rpx;
     }
 
-    .title-en {
+    .title-desc {
       font-size: 10px;
     }
   }
@@ -441,8 +440,8 @@ export default {
     textarea {
       width: 100%;
       height: 120px;
-      font-size: 15px;
-      padding: 10rpx 0;
+      font-size: 13px;
+      padding: 15rpx 0;
     }
   }
 
