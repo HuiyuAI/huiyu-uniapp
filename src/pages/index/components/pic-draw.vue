@@ -8,10 +8,10 @@
           <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="cueword" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
+          <textarea v-model="prompt" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
         </view>
         <view class="text-num-box">
-          <view class="text-num">{{ cueword_num }}/{{ maxinput }}</view>
+          <view>{{ prompt_num }}/{{ maxinput }}</view>
         </view>
       </view>
       <view class="recommended-word-box">
@@ -26,7 +26,12 @@
         <view class="model-content">
           <view class="model-item-list" v-for="(item,index) in models" :key="index">
             <view class="model-item" :class="item.selected?'model-sel':''" @click="clickModel(item,index)">
-              <view class="model-item-txt huiyu-line">{{ item.model_name }}</view>
+              <view class="model-normal">
+                <view class="img-box">
+                  <image :src="item.coverUrl" mode="aspectFill"></image>
+                </view>
+                <view class="model-item-txt huiyu-line">{{ item.name }}</view>
+              </view>
             </view>
           </view>
         </view>
@@ -89,21 +94,21 @@
           <view class="title-desc">(负向描述词)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="reverse" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
+          <textarea v-model="negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
         </view>
         <view class="text-num-box">
           <view class="text-num">{{ reverse_num }}/{{ maxinput }}</view>
         </view>
       </view>
       <!-- 描述词相关度 -->
-      <view class="box-content cueword-box">
+      <view class="box-content prompt-box">
         <view class="item-section">描述词相关度</view>
         <view class="slier">
-          <slider :value="formData.cfg" min="3" max="15" @change="cuewordSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
+          <slider :value="formData.cfg" min="3" max="15" @change="cfgChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
         </view>
       </view>
       <!-- 采样步数 -->
-      <view class="box-content cueword-box">
+      <view class="box-content prompt-box">
         <view class="item-section">采样步数</view>
         <view class="slier">
           <slider :value="formData.steps" min="10" max="30" @change="sampleSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
@@ -123,6 +128,8 @@
 </template>
 
 <script>
+import {getModelList} from "@/api/sd";
+
 export default {
   name: 'pic-draw',
   props: {
@@ -133,115 +140,53 @@ export default {
   },
   data() {
     return {
-      isBusying: false,
-      samplerVal: 0,
-      cueword: '',
-      reverse: '',
-      seed_num: '',
       formData: {
         modelId: 1,
-        size: 1,
         prompt: "",
         negativePrompt: "",
+        size: 1,
         count: 1,
         cfg: 7,
         steps: 20,
         seed: -1,
       },
-      maxinput: 500,
-      cueword_num: 0,
-      reverse_num: 0,
+      isBusying: false,
       models: [],
+      prompt: '',
+      negativePrompt: '',
+
+      seed_num: '',
+
+      maxinput: 500,
+      prompt_num: 0,
+      reverse_num: 0,
       sizeRatios: [
-        {
-          ratio: '1:1',
-          width: 15,
-          height: 15,
-          val: 1,
-          desc: '头像框',
-          selected: true
-        },
-        {
-          ratio: '3:4',
-          width: 15,
-          height: 20,
-          val: 2,
-          desc: '社交媒体',
-          selected: false
-        },
-        {
-          ratio: '4:3',
-          width: 20,
-          height: 15,
-          val: 3,
-          desc: '文章配图',
-          selected: false
-        },
-        {
-          ratio: '9:16',
-          width: 15,
-          height: 26,
-          val: 4,
-          desc: '手机壁纸',
-          selected: false
-        },
-        {
-          ratio: '16:9',
-          width: 26,
-          height: 15,
-          val: 5,
-          desc: '电脑壁纸',
-          selected: false
-        },
+        {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像框', selected: true},
+        {ratio: '3:4', width: 15, height: 20, val: 2, desc: '社交媒体', selected: false},
+        {ratio: '4:3', width: 20, height: 15, val: 3, desc: '文章配图', selected: false},
+        {ratio: '9:16', width: 15, height: 26, val: 4, desc: '手机壁纸', selected: false},
+        {ratio: '16:9', width: 26, height: 15, val: 5, desc: '电脑壁纸', selected: false},
       ],
       generates: [
-        {
-          val: 1,
-          selected: true,
-        },
-        {
-          val: 2,
-          selected: false,
-        },
-        {
-          val: 3,
-          selected: false,
-        },
-        {
-          val: 4,
-          selected: false,
-        }
+        {val: 1, selected: true},
+        {val: 2, selected: false},
+        {val: 3, selected: false},
+        {val: 4, selected: false},
       ],
       qualitys: [
-        {
-          title: '普通',
-          val: 1,
-          selected: true,
-        },
-        {
-          title: '高清',
-          val: 2,
-          selected: false,
-        },
-        {
-          title: '超高清',
-          val: 3,
-          selected: false,
-        },
-        {
-          title: '精绘',
-          val: 4,
-          selected: false,
-        }
+        {title: '普通', val: 1, selected: true},
+        {title: '高清', val: 2, selected: false},
+        {title: '超高清', val: 3, selected: false},
+        {title: '精绘', val: 4, selected: false},
       ],
       generatesImages: [],
     }
   },
   watch: {
-    cueword(n, o) {
-      this.cueword_num = n.length;
+    prompt(n, o) {
+      this.prompt_num = n.length;
     },
-    reverse(n, o) {
+    negativePrompt(n, o) {
       this.reverse_num = n.length;
     },
     "formData.steps": {
@@ -262,19 +207,33 @@ export default {
     }
   },
   mounted() {
-    this.getSdModels();
+    this.getModelList()
   },
   methods: {
     /**
      * 获取模型
      */
-    getSdModels() {
-
+    getModelList() {
+      getModelList().then(res => {
+        this.models = res
+        this.models.forEach((item, index) => {
+          if (index === 0) {
+            item.selected = true
+          } else {
+            item.selected = false
+          }
+        })
+      })
     },
     /**
      * 切换模型
      */
     clickModel(item, index) {
+      this.models.forEach((fItem, fIndex) => {
+        fItem.selected = false
+      })
+      item.selected = true
+      this.formData.modelId = item.id
     },
     /**
      * 随机推荐词
@@ -285,7 +244,7 @@ export default {
     /**
      * 提示词相关性改变
      */
-    cuewordSliderChange(e) {
+    cfgChange(e) {
       this.formData.cfg = e.detail.value;
     },
     /**
@@ -326,17 +285,13 @@ export default {
      * 开始生成
      */
     async clickSubmit() {
-      if (!this.cueword && !this.reverse) {
-        return this.$utils.showToast("请输入提示词或反向提示词")
+      if (!this.prompt) {
+        return this.$utils.showToast("请输入画面描述")
       }
 
       if (this.isBusying) {
         return this.$utils.showToast("请稍后...")
       }
-
-      this.formData.prompt = this.cueword + ",<lora:loraName:1.0>";
-      // 反向提示语处理
-      this.formData.negativePrompt = this.reverse + ",nsfw,jinpingxi,xijinping";
 
       this.isBusying = true;
       uni.showLoading({
@@ -492,45 +447,6 @@ export default {
 
     .model-item-list {
       width: calc(33% - 14rpx);
-      height: 80rpx;
-      margin: 0 20rpx 0rpx 0;
-
-      &:nth-child(3n) {
-        margin: 0;
-      }
-
-      .model-item {
-        padding: 10rpx 15rpx;
-        font-size: 14px;
-        border-radius: 10rpx;
-        background-color: #323232;
-        box-sizing: border-box;
-        width: 100%;
-        border: 1px solid transparent;
-
-        .model-item-txt {
-          text-align: center;
-        }
-      }
-
-      .model-sel {
-        background-color: transparent;
-        border: 1px solid $huiyu-color-main;
-        color: $huiyu-color-main;
-        box-sizing: border-box;
-      }
-    }
-  }
-}
-
-.template-box {
-  .template-content {
-    padding: 10rpx 10rpx 0;
-    display: flex;
-    flex-wrap: wrap;
-
-    .template-item-list {
-      width: calc(33% - 14rpx);
       height: 160rpx;
       margin: 0 20rpx 0rpx 0;
 
@@ -538,7 +454,7 @@ export default {
         margin: 0;
       }
 
-      .template-item {
+      .model-item {
         font-size: 14px;
         border-radius: 10rpx;
         background-color: #323232;
@@ -548,7 +464,7 @@ export default {
         border: 1px solid transparent;
         overflow: hidden;
 
-        .template-normal {
+        .model-normal {
           width: 100%;
           height: 100%;
           position: relative;
@@ -558,7 +474,7 @@ export default {
             height: 100%;
           }
 
-          .template-item-txt {
+          .model-item-txt {
             padding: 5rpx 10rpx;
             box-sizing: border-box;
             position: absolute;
@@ -569,34 +485,15 @@ export default {
             background-color: rgba(0, 0, 0, 0.7);
           }
         }
-
-        .template-no {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          .iconfont {
-            font-size: 26px;
-            color: #969696;
-          }
-        }
       }
 
-      .template-sel {
+      .model-sel {
         border: 1px solid $huiyu-color-main;
         color: $huiyu-color-main;
         box-sizing: border-box;
       }
     }
   }
-}
-
-.cueword-box {
-}
-
-.samplers-box {
 }
 
 .seed-box {

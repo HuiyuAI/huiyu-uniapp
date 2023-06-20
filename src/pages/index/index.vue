@@ -26,7 +26,6 @@ export default {
       notice: [
         '欢迎使用绘雨AI，如果您有任何建议，欢迎联系我们。',
       ],
-      isNodes: 0,
       tabsConfig: {
         alignLeft: false,
         underLineColor: '#F8D849',
@@ -51,7 +50,6 @@ export default {
     }
   },
   onReady() {
-    this.isNodes++;
     let that = this;
     this.$utils.getRect('#tabs-rect').then(res => {
       let w_h = uni.getSystemInfoSync().windowHeight;
