@@ -8,10 +8,10 @@
           <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="prompt" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
+          <textarea v-model="formData.prompt" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
         </view>
         <view class="text-num-box">
-          <view>{{ prompt_num }}/{{ maxinput }}</view>
+          <view>{{ promptNum }}/{{ maxInput }}</view>
         </view>
       </view>
       <view class="recommended-word-box">
@@ -24,8 +24,8 @@
       <view class="box-content model-box">
         <view class="item-section">模型选择</view>
         <view class="model-content">
-          <view class="model-item-list" v-for="(item,index) in models" :key="index">
-            <view class="model-item" :class="item.selected?'model-sel':''" @click="clickModel(item,index)">
+          <view class="model-item-list" v-for="(item,index) in modelList" :key="index">
+            <view class="model-item" :class="item.selected?'model-sel':''" @click="clickModel(item)">
               <view class="model-normal">
                 <view class="img-box">
                   <image :src="item.coverUrl" mode="aspectFill"></image>
@@ -40,8 +40,8 @@
       <view class="box-content ratio-box">
         <view class="item-section">尺寸比例</view>
         <view class="ratio-content">
-          <view class="ratio-list" v-for="(item,index) in sizeRatios" :key="index">
-            <view class="ratio-item" :class="item.selected?'ratio-sel':''" @click="clickRatioChange(item,index)">
+          <view class="ratio-list" v-for="(item,index) in sizeList" :key="index">
+            <view class="ratio-item" :class="item.selected?'ratio-sel':''" @click="sizeChange(item)">
               <view class="item-shape-box">
                 <view class="item-shape" :style="'width:'+item.width+'px;height:'+item.height+'px;'"></view>
               </view>
@@ -54,8 +54,8 @@
       <view class="box-content generate-box">
         <view class="item-section">生成数量</view>
         <view class="generate-content">
-          <view class="generate-list" v-for="(item,index) in generates" :key="index">
-            <view class="generate-item" :class="item.selected?'generate-sel':''" @click="clickGenerateChange(item,index)">{{ item.val }}张</view>
+          <view class="generate-list" v-for="(item,index) in countList" :key="index">
+            <view class="generate-item" :class="item.selected?'generate-sel':''" @click="countChange(item)">{{ item.val }}张</view>
           </view>
         </view>
       </view>
@@ -63,8 +63,8 @@
       <view class="box-content quality-box">
         <view class="item-section">图片质量</view>
         <view class="quality-content">
-          <view class="quality-list" v-for="(item,index) in qualitys" :key="index">
-            <view class="quality-item" :class="item.selected?'quality-sel':''" @click="clickQualityChange(item,index)">{{ item.title }}</view>
+          <view class="quality-list" v-for="(item,index) in qualityList" :key="index">
+            <view class="quality-item" :class="item.selected?'quality-sel':''" @click="qualityChange(item)">{{ item.title }}</view>
           </view>
         </view>
       </view>
@@ -94,10 +94,10 @@
           <view class="title-desc">(负向描述词)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxinput"></textarea>
+          <textarea v-model="formData.negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
         </view>
         <view class="text-num-box">
-          <view class="text-num">{{ reverse_num }}/{{ maxinput }}</view>
+          <view class="text-num">{{ negativePromptNum }}/{{ maxInput }}</view>
         </view>
       </view>
       <!-- 描述词相关度 -->
@@ -111,7 +111,7 @@
       <view class="box-content prompt-box">
         <view class="item-section">采样步数</view>
         <view class="slier">
-          <slider :value="formData.steps" min="10" max="30" @change="sampleSliderChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
+          <slider :value="formData.steps" min="10" max="30" @change="stepsChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
         </view>
       </view>
       <!-- 随机种子 -->
@@ -119,7 +119,7 @@
         <view class="item-section">随机种子
           <text class="item-section-subs">(选填)</text>
         </view>
-        <input class="seed-input" v-model="seed_num" type="number" placeholder="请输入随机种子"/>
+        <input class="seed-input" v-model="formData.seed" type="number" placeholder="请输入随机种子"/>
       </view>
 
       <view class="huiyu-safe20"></view>
@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import {getModelList} from "@/api/sd";
+import {getModelList, txt2img} from "@/api/sd";
 
 export default {
   name: 'pic-draw',
@@ -142,38 +142,34 @@ export default {
     return {
       formData: {
         modelId: 1,
-        prompt: "",
-        negativePrompt: "",
+        prompt: '',
+        negativePrompt: '',
+        steps: 20,
         size: 1,
         count: 1,
-        cfg: 7,
-        steps: 20,
+        quality: 1,
+        cfg: 9,
         seed: -1,
       },
       isBusying: false,
-      models: [],
-      prompt: '',
-      negativePrompt: '',
-
-      seed_num: '',
-
-      maxinput: 500,
-      prompt_num: 0,
-      reverse_num: 0,
-      sizeRatios: [
+      modelList: [],
+      promptNum: 0,
+      negativePromptNum: 0,
+      maxInput: 500,
+      sizeList: [
         {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像框', selected: true},
         {ratio: '3:4', width: 15, height: 20, val: 2, desc: '社交媒体', selected: false},
         {ratio: '4:3', width: 20, height: 15, val: 3, desc: '文章配图', selected: false},
         {ratio: '9:16', width: 15, height: 26, val: 4, desc: '手机壁纸', selected: false},
         {ratio: '16:9', width: 26, height: 15, val: 5, desc: '电脑壁纸', selected: false},
       ],
-      generates: [
+      countList: [
         {val: 1, selected: true},
         {val: 2, selected: false},
         {val: 3, selected: false},
         {val: 4, selected: false},
       ],
-      qualitys: [
+      qualityList: [
         {title: '普通', val: 1, selected: true},
         {title: '高清', val: 2, selected: false},
         {title: '超高清', val: 3, selected: false},
@@ -184,27 +180,11 @@ export default {
   },
   watch: {
     prompt(n, o) {
-      this.prompt_num = n.length;
+      this.promptNum = n.length
     },
     negativePrompt(n, o) {
-      this.reverse_num = n.length;
+      this.negativePromptNum = n.length
     },
-    "formData.steps": {
-      immediate: true,
-      handler(n, o) {
-        this.formData.hr_second_pass_steps = n;
-      }
-    },
-    seed_num: {
-      immediate: true,
-      handler(n, o) {
-        if (n.length > 0) {
-          this.formData.seed = n;
-        } else {
-          this.formData.seed = -1;
-        }
-      }
-    }
   },
   mounted() {
     this.getModelList()
@@ -215,8 +195,12 @@ export default {
      */
     getModelList() {
       getModelList().then(res => {
-        this.models = res
-        this.models.forEach((item, index) => {
+        this.modelList = res
+        // 按照priority从小到大排序
+        this.modelList.sort((a, b) => {
+          return a.priority - b.priority
+        })
+        this.modelList.forEach((item, index) => {
           if (index === 0) {
             item.selected = true
           } else {
@@ -228,8 +212,8 @@ export default {
     /**
      * 切换模型
      */
-    clickModel(item, index) {
-      this.models.forEach((fItem, fIndex) => {
+    clickModel(item) {
+      this.modelList.forEach((fItem) => {
         fItem.selected = false
       })
       item.selected = true
@@ -242,56 +226,63 @@ export default {
 
     },
     /**
-     * 提示词相关性改变
+     * 尺寸比例改变
      */
-    cfgChange(e) {
-      this.formData.cfg = e.detail.value;
-    },
-    /**
-     * 采样迭代步数改变
-     */
-    sampleSliderChange(e) {
-      this.formData.steps = e.detail.value;
-    },
-    /**
-     * 采样比例改变
-     */
-    clickRatioChange(item, index) {
-      this.sizeRatios.forEach((fItem, fIndex) => {
-        fItem.selected = false;
-      });
-      item.selected = true;
+    sizeChange(item) {
+      this.sizeList.forEach((fItem) => {
+        fItem.selected = false
+      })
+      item.selected = true
+      this.formData.size = item.val
     },
     /**
      * 生成数量改变
      */
-    clickGenerateChange(item, index) {
-      this.generates.forEach((fItem, fIndex) => {
-        fItem.selected = false;
-      });
-      item.selected = true;
-      this.formData.count = item.val;
+    countChange(item) {
+      this.countList.forEach((fItem) => {
+        fItem.selected = false
+      })
+      item.selected = true
+      this.formData.count = item.val
     },
     /**
      * 图片质量选择
      */
-    clickQualityChange(item, index) {
-      this.qualitys.forEach((fItem, fIndex) => {
-        fItem.selected = false;
-      });
-      item.selected = true;
+    qualityChange(item) {
+      this.qualityList.forEach((fItem) => {
+        fItem.selected = false
+      })
+      item.selected = true
+      this.formData.quality = item.val
+    },
+    /**
+     * 描述词相关度改变
+     */
+    cfgChange(e) {
+      this.formData.cfg = e.detail.value
+    },
+    /**
+     * 采样步数改变
+     */
+    stepsChange(e) {
+      this.formData.steps = e.detail.value
     },
     /**
      * 开始生成
      */
     async clickSubmit() {
-      if (!this.prompt) {
+      if (!this.formData.prompt) {
         return this.$utils.showToast("请输入画面描述")
       }
 
       if (this.isBusying) {
         return this.$utils.showToast("请稍后...")
       }
+
+      console.log(this.formData)
+      // txt2img(this.formData).then(res => {
+      //   console.log(res)
+      // })
 
       this.isBusying = true;
       uni.showLoading({
@@ -319,7 +310,6 @@ export default {
      * 下载
      */
     async clickDown(item, index) {
-
       if (this.isBusying) {
         return this.$utils.showToast("请稍后...")
       }

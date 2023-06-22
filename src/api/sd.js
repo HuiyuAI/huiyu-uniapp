@@ -6,3 +6,13 @@ export function getModelList(data) {
     method: 'GET',
   })
 }
+
+export function txt2img(data) {
+  return axios({
+    url: '/sd/txt2img',
+    method: 'POST',
+    data: {
+      ...data
+    }
+  })
+}
