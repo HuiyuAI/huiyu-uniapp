@@ -1,8 +1,8 @@
 <template>
   <view class="com-pic-draw">
-    <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'">
+    <scroll-view scroll-y="true">
       <!-- 正向描述词 -->
-      <view class="input-item">
+      <view class="input-item" style="margin-top: 0">
         <view class="section">
           <view class="title">画面描述</view>
           <view class="title-desc">(建议以推荐词为基础修改)</view>
@@ -21,7 +21,7 @@
         </view>
       </view>
       <!-- 模型选择 -->
-      <view class="box-content model-box">
+      <view class="model-box">
         <view class="item-section">模型选择</view>
         <view class="model-content">
           <view class="model-item-list" v-for="(item,index) in modelList" :key="index">
@@ -37,7 +37,7 @@
         </view>
       </view>
       <!-- 尺寸比例 -->
-      <view class="box-content ratio-box">
+      <view class="ratio-box">
         <view class="item-section">尺寸比例</view>
         <view class="ratio-content">
           <view class="ratio-list" v-for="(item,index) in sizeList" :key="index">
@@ -51,7 +51,7 @@
         </view>
       </view>
       <!-- 生成数量 -->
-      <view class="box-content generate-box">
+      <view class="generate-box">
         <view class="item-section">生成数量</view>
         <view class="generate-content">
           <view class="generate-list" v-for="(item,index) in countList" :key="index">
@@ -60,7 +60,7 @@
         </view>
       </view>
       <!-- 图片质量 -->
-      <view class="box-content quality-box">
+      <view class="quality-box">
         <view class="item-section">图片质量</view>
         <view class="quality-content">
           <view class="quality-list" v-for="(item,index) in qualityList" :key="index">
@@ -68,8 +68,55 @@
           </view>
         </view>
       </view>
+
+      <!-- 高级设置 -->
+      <view class="advanced-box">
+        <view class="left">高级设置</view>
+        <view class="right">
+          <u-switch v-model="enableAdvanced" size="40" active-color="#2979ff"></u-switch>
+        </view>
+      </view>
+
+      <view v-if="enableAdvanced">
+        <!-- 反向描述词 -->
+        <view class="input-item">
+          <view class="section">
+            <view class="title">我不要</view>
+            <view class="title-desc">(负向描述词)</view>
+          </view>
+          <view class="text-area">
+            <textarea v-model="formData.negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
+          </view>
+          <view class="text-num-box">
+            <view>{{ negativePromptNum }}/{{ maxInput }}</view>
+          </view>
+        </view>
+        <!-- 描述词相关度 -->
+        <view>
+          <view class="item-section">描述词相关度</view>
+          <slider :value="formData.cfg" min="3" max="15" @change="cfgChange" :show-value="true" active-color="#2979ff" block-color="#2979ff" block-size="20"></slider>
+        </view>
+        <!-- 采样步数 -->
+        <view>
+          <view class="item-section">采样步数</view>
+          <slider :value="formData.steps" min="10" max="30" @change="stepsChange" :show-value="true" active-color="#2979ff" block-color="#2979ff" block-size="20"></slider>
+        </view>
+        <!-- 随机种子 -->
+        <view class="seed-box">
+          <view class="item-section">随机种子
+            <text class="item-section-subs">(选填)</text>
+          </view>
+          <input class="seed-input" v-model="formData.seed" type="number" placeholder="请输入随机种子"/>
+        </view>
+      </view>
+
+      <!-- 提交 -->
+      <view class="submit-box" @click="clickSubmit">
+        <button>立即生成（消耗{{ integral }}积分）</button>
+      </view>
+
       <!-- 生成结果 -->
-      <view class="box-content result-box" v-if="generatesImages && generatesImages.length>0">
+      <view class="result-box">
         <view class="item-section">生成结果(点击图片长按保存)</view>
         <view class="result-content">
           <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index" @click="clickImg(generatesImages,index)">
@@ -81,48 +128,7 @@
         </view>
       </view>
 
-      <!-- 提交 -->
-      <view class="submit-box" @click="clickSubmit">
-        <view class="submit-btn" v-if="generatesImages.length<=0">立即生成</view>
-        <view class="submit-btn" v-else>再画一次</view>
-      </view>
-
-      <!-- 反向描述词 -->
-      <view class="input-item">
-        <view class="section">
-          <view class="title">我不要</view>
-          <view class="title-desc">(负向描述词)</view>
-        </view>
-        <view class="text-area">
-          <textarea v-model="formData.negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
-        </view>
-        <view class="text-num-box">
-          <view class="text-num">{{ negativePromptNum }}/{{ maxInput }}</view>
-        </view>
-      </view>
-      <!-- 描述词相关度 -->
-      <view class="box-content prompt-box">
-        <view class="item-section">描述词相关度</view>
-        <view class="slier">
-          <slider :value="formData.cfg" min="3" max="15" @change="cfgChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
-        </view>
-      </view>
-      <!-- 采样步数 -->
-      <view class="box-content prompt-box">
-        <view class="item-section">采样步数</view>
-        <view class="slier">
-          <slider :value="formData.steps" min="10" max="30" @change="stepsChange" :show-value="true" active-color="#F8D849" block-color="#F8D849" block-size="20"></slider>
-        </view>
-      </view>
-      <!-- 随机种子 -->
-      <view class="box-content seed-box">
-        <view class="item-section">随机种子
-          <text class="item-section-subs">(选填)</text>
-        </view>
-        <input class="seed-input" v-model="formData.seed" type="number" placeholder="请输入随机种子"/>
-      </view>
-
-      <view class="huiyu-safe20"></view>
+      <view class="safe-area"></view>
     </scroll-view>
   </view>
 </template>
@@ -151,11 +157,13 @@ export default {
         cfg: 9,
         seed: -1,
       },
+      integral: 2,
       isBusying: false,
       modelList: [],
       promptNum: 0,
       negativePromptNum: 0,
       maxInput: 500,
+      enableAdvanced: false,
       sizeList: [
         {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像框', selected: true},
         {ratio: '3:4', width: 15, height: 20, val: 2, desc: '社交媒体', selected: false},
@@ -175,7 +183,11 @@ export default {
         {title: '超高清', val: 3, selected: false},
         {title: '精绘', val: 4, selected: false},
       ],
-      generatesImages: [],
+      generatesImages: [
+        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
+        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
+        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
+      ],
     }
   },
   watch: {
@@ -275,20 +287,20 @@ export default {
         return this.$utils.showToast("请输入画面描述")
       }
 
-      if (this.isBusying) {
-        return this.$utils.showToast("请稍后...")
-      }
+      // if (this.isBusying) {
+      //   return this.$utils.showToast("请稍后...")
+      // }
 
       console.log(this.formData)
       // txt2img(this.formData).then(res => {
       //   console.log(res)
       // })
 
-      this.isBusying = true;
-      uni.showLoading({
-        title: '正在生成...',
-        mask: true
-      });
+      // this.isBusying = true;
+      // uni.showLoading({
+      //   title: '正在生成...',
+      //   mask: true
+      // });
 
     },
     /**
@@ -356,7 +368,7 @@ export default {
 
 <style lang="scss">
 .com-pic-draw {
-  padding: 0rpx 30rpx;
+  padding: 0rpx 20rpx;
 }
 
 .input-item {
@@ -425,10 +437,6 @@ export default {
   }
 }
 
-.box-content {
-  padding: 0 20rpx;
-}
-
 .model-box {
   .model-content {
     padding: 10rpx 10rpx 0;
@@ -451,7 +459,7 @@ export default {
         box-sizing: border-box;
         width: 100%;
         height: 140rpx;
-        border: 1px solid transparent;
+        border: 2px solid transparent;
         overflow: hidden;
 
         .model-normal {
@@ -472,13 +480,13 @@ export default {
             left: 0;
             width: 100%;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
           }
         }
       }
 
       .model-sel {
-        border: 1px solid $huiyu-color-main;
+        border: 2px solid $huiyu-color-main;
         color: $huiyu-color-main;
         box-sizing: border-box;
       }
@@ -516,7 +524,7 @@ export default {
         flex-direction: column;
         align-items: center;
         border-radius: 10rpx;
-        border: 1px solid #969696;
+        border: 2px solid #555555;
 
         .item-shape-box {
           width: 60rpx;
@@ -526,7 +534,7 @@ export default {
           align-items: center;
 
           .item-shape {
-            background-color: #969696;
+            background-color: #555555;
             border-radius: 5rpx;
           }
         }
@@ -537,7 +545,7 @@ export default {
       }
 
       .ratio-sel {
-        border: 1px solid $huiyu-color-main;
+        border: 2px solid $huiyu-color-main;
       }
     }
   }
@@ -560,13 +568,13 @@ export default {
         display: flex;
         justify-content: center;
         padding: 10rpx 0;
-        background-color: #969696;
+        background-color: #555555;
         border-radius: 10rpx;
         font-size: 14px;
       }
 
       .generate-sel {
-        background-color: $huiyu-color-main;
+        background: $huiyu-color-button;
       }
     }
   }
@@ -589,31 +597,31 @@ export default {
         display: flex;
         justify-content: center;
         padding: 10rpx 0;
-        background-color: #969696;
+        background-color: #555555;
         border-radius: 10rpx;
         font-size: 14px;
       }
 
       .quality-sel {
-        background-color: $huiyu-color-main;
+        background: $huiyu-color-button;
       }
     }
   }
 }
 
-.submit-box {
+.advanced-box {
   display: flex;
-  justify-content: center;
-  margin: 80rpx 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40rpx 0 10rpx;
 
-  .submit-btn {
-    width: 80%;
-    padding: 20rpx 0;
-    background-color: $huiyu-color-main;
-    color: #323232;
-    border-radius: 10rpx;
+  .left {
+    font-size: 20px;
+  }
+
+  .right {
     display: flex;
-    justify-content: center;
+    margin-right: 10rpx;
   }
 }
 
@@ -652,38 +660,30 @@ export default {
       }
     }
   }
-
 }
 
-::v-deep uni-slider {
-  margin: 10px 2px !important;
+.submit-box {
+  z-index: 10;
+  width: 70%;
+  position: fixed;
+  bottom: 20rpx;
+  left: 15%;
+  text-align: center;
+  border-radius: 100rpx;
+  box-shadow: 0 0 3px 3px rgba(72, 219, 251, 0.3), 0 0 5px 5px rgba(72, 219, 251, 0.3);
+
+  button {
+    background: linear-gradient(135deg, hsl(170, 80%, 70%), hsl(200, 80%, 70%), hsl(250, 80%, 70%));
+    color: black;
+    border-radius: 100rpx;
+    font-size: 30rpx;
+    font-weight: bold;
+  }
 }
 
-::v-deep uni-slider .uni-slider-value {
-  width: auto !important;
-  margin-left: 20rpx !important;
-  // text-align: right;
-  min-width: 20px;
-}
-
-/deep/ .uni-select__selector {
-  background-color: #323232 !important;
-  border: 1px solid #969696 !important;
-}
-
-::v-deep .uni-select .uni-popper__arrow {
-  border-bottom-color: #969696 !important;
-}
-
-::v-deep .uni-select .uni-popper__arrow::after {
-  border-bottom-color: #969696 !important;
-}
-
-::v-deep .uni-select .uni-select__input-text {
-  color: #fff;
-}
-
-::v-deep .uni-select .uni-select__input-placeholder {
-  color: #6a6a6a !important;
+.safe-area {
+  padding-bottom: 120rpx;
+  padding-bottom: calc(120rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
 }
 </style>
