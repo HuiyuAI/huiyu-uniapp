@@ -16,8 +16,8 @@
       </view>
       <view class="recommended-word-box">
         <view class="recommended-word" @click="recommendedWord">
-          <text class="iconfont icon-qiehuan"></text>
-          点击试试推荐词
+          试试推荐词
+          <text class="iconfont icon-shuaxin"></text>
         </view>
       </view>
       <!-- 模型选择 -->
@@ -122,7 +122,7 @@
           <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index" @click="clickImg(generatesImages,index)">
             <image :src="item" mode="aspectFit"></image>
             <view class="download" @click.stop="clickDown(item,index)">
-              <text class="iconfont icon-xiazai"></text>
+<!--              <text class="iconfont icon-xiazai"></text>-->
             </view>
           </view>
         </view>
@@ -416,15 +416,11 @@ export default {
   .recommended-word {
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: 12px;
     border: 1rpx solid $huiyu-color-main;
     padding: 6rpx 12rpx;
     border-radius: 10rpx;
     color: $huiyu-color-main;
-
-    text {
-      margin-right: 5rpx;
-    }
   }
 }
 

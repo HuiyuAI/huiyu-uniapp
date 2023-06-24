@@ -32,7 +32,7 @@ export default {
 <style>
 /*每个页面公共css */
 @import "static/css/base.scss";
-@import "static/font/iconfont.css";
+@import "static/icon/iconfont.css";
 
 ::v-deep .uni-toast {
   background-color: #fff !important;
