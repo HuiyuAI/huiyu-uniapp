@@ -106,7 +106,7 @@
           <view class="item-section">随机种子
             <text class="item-section-subs">(选填)</text>
           </view>
-          <input class="seed-input" v-model="formData.seed" type="number" placeholder="请输入随机种子"/>
+          <input class="seed-input" v-model="formData.seed" type="number" maxlength="15" @input="seedInput" placeholder="请输入随机种子"/>
         </view>
       </view>
 
@@ -122,7 +122,7 @@
           <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index" @click="clickImg(generatesImages,index)">
             <image :src="item" mode="aspectFit"></image>
             <view class="download" @click.stop="clickDown(item,index)">
-<!--              <text class="iconfont icon-xiazai"></text>-->
+              <!--              <text class="iconfont icon-xiazai"></text>-->
             </view>
           </view>
         </view>
@@ -138,12 +138,6 @@ import {getModelList, txt2img} from "@/api/sd";
 
 export default {
   name: 'Draw',
-  props: {
-    scrollHeight: {
-      typeof: Number,
-      default: 0
-    }
-  },
   data() {
     return {
       formData: {
@@ -278,6 +272,16 @@ export default {
      */
     stepsChange(e) {
       this.formData.steps = e.detail.value
+    },
+    seedInput(e) {
+      // 只允许输入正负整数
+      const value = e.target.value
+      const isValid = /^-?\d+$/.test(value)
+      if (value !== '-' && !isValid) {
+        this.$nextTick(() => {
+          this.formData.seed = value.slice(0, -1)
+        })
+      }
     },
     /**
      * 开始生成
@@ -418,7 +422,7 @@ export default {
     align-items: center;
     font-size: 12px;
     border: 1rpx solid $huiyu-color-main;
-    padding: 6rpx 12rpx;
+    padding: 6rpx 4rpx 6rpx 12rpx;
     border-radius: 10rpx;
     color: $huiyu-color-main;
   }
