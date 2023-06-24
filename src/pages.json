@@ -56,5 +56,14 @@
         "enablePullDownRefresh": true
       }
     }
-  ]
+  ],
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "test",
+        "path": "pages/pic/index"
+      }
+    ]
+  }
 }

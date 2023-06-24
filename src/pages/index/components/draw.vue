@@ -106,7 +106,7 @@
           <view class="item-section">随机种子
             <text class="item-section-subs">(选填)</text>
           </view>
-          <input class="seed-input" v-model="formData.seed" type="number" maxlength="15" @input="seedInput" placeholder="请输入随机种子"/>
+          <input class="seed-input" v-model="seed" type="number" maxlength="10" @input="seedInput" placeholder="请输入随机种子"/>
         </view>
       </view>
 
@@ -149,7 +149,7 @@ export default {
         count: 1,
         quality: 1,
         cfg: 9,
-        seed: -1,
+        seed: null,
       },
       integral: 2,
       isBusying: false,
@@ -158,6 +158,7 @@ export default {
       negativePromptNum: 0,
       maxInput: 500,
       enableAdvanced: false,
+      seed: null,
       sizeList: [
         {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像框', selected: true},
         {ratio: '3:4', width: 15, height: 20, val: 2, desc: '社交媒体', selected: false},
@@ -192,7 +193,7 @@ export default {
       this.negativePromptNum = n.length
     },
   },
-  mounted() {
+  created() {
     this.getModelList()
   },
   methods: {
@@ -274,12 +275,14 @@ export default {
       this.formData.steps = e.detail.value
     },
     seedInput(e) {
-      // 只允许输入正负整数
+      // 只允许输入正整数
       const value = e.target.value
-      const isValid = /^-?\d+$/.test(value)
-      if (value !== '-' && !isValid) {
+      const isValid = /^[1-9]\d*$/.test(value)
+      if (!value || isValid) {
+        this.formData.seed = value
+      } else {
         this.$nextTick(() => {
-          this.formData.seed = value.slice(0, -1)
+          this.seed = this.formData.seed
         })
       }
     },

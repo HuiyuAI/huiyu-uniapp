@@ -14,18 +14,16 @@
 import Draw from "./components/draw.vue"
 
 export default {
-  components: {
-    Draw,
-  },
+  components: {Draw},
   data() {
     return {
       noticeList: [],
     }
   },
-  onReady() {
-  },
   onLoad() {
     this.getNoticeList()
+  },
+  onReady() {
   },
   /**
    * 用户点击右上角分享
