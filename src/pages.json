@@ -12,8 +12,8 @@
     "backgroundColor": "#000000"
   },
   "tabBar": {
-    "color": "#b3b3b3",
-    "selectedColor": "#F8D849",
+    "color": "#B3B3B3",
+    "selectedColor": "#759EF0",
     "borderStyle": "white",
     "backgroundColor": "#1A1A1A",
     "list": [
@@ -21,12 +21,18 @@
         "pagePath": "pages/index/index",
         "iconPath": "static/images/tab_draw.png",
         "selectedIconPath": "static/images/tab_draw_sel.png",
-        "text": "SD创作"
+        "text": "创作"
+      },
+      {
+        "pagePath": "pages/pic/index",
+        "iconPath": "static/images/tab_folder_open.png",
+        "selectedIconPath": "static/images/tab_folder_open_sel.png",
+        "text": "画夹"
       },
       {
         "pagePath": "pages/me/index",
-        "iconPath": "static/images/me.png",
-        "selectedIconPath": "static/images/me_fill.png",
+        "iconPath": "static/images/tab_me.png",
+        "selectedIconPath": "static/images/tab_me_sel.png",
         "text": "我的"
       }
     ]
@@ -35,6 +41,13 @@
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
       "path": "pages/index/index"
+    },
+    {
+      "path": "pages/pic/index",
+      "style": {
+        "navigationBarTitleText": "画夹",
+        "enablePullDownRefresh": true
+      }
     },
     {
       "path": "pages/me/index",

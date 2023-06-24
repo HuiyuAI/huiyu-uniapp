@@ -27,7 +27,6 @@ import {login} from "@/api/login";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 
 export default {
-  name: "Me",
   data() {
     return {
       userInfo: {
@@ -136,15 +135,8 @@ export default {
 }
 </script>
 
-<style>
-page {
-  background-color: #f5f5f5;
-}
-</style>
-
 <style scoped lang="scss">
 .user-box {
-  background-color: #fff;
   display: flex;
   flex-direction: column;
   padding: 20rpx 20rpx 10rpx 30rpx;

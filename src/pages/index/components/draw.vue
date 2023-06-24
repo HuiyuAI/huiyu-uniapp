@@ -137,7 +137,7 @@
 import {getModelList, txt2img} from "@/api/sd";
 
 export default {
-  name: 'pic-draw',
+  name: 'Draw',
   props: {
     scrollHeight: {
       typeof: Number,

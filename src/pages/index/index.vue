@@ -5,17 +5,17 @@
       <u-notice-bar mode="vertical" duration="3000" type="none" :list="noticeList" color="#969696"></u-notice-bar>
     </view>
     <!-- tab-item -->
-    <pic-draw/>
+    <Draw/>
   </view>
 
 </template>
 
 <script>
-import picDraw from "./components/pic-draw.vue"
+import Draw from "./components/draw.vue"
 
 export default {
   components: {
-    picDraw,
+    Draw,
   },
   data() {
     return {

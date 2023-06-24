@@ -16,28 +16,8 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-guanbi:before {
-	content: "\e611";
-}
-
-.icon-xiangqing:before {
-	content: "\e634";
-}
-
-.icon-jiahao:before {
-	content: "\e669";
-}
-
-.icon-no-full:before {
-	content: "\ea79";
-}
-
 .icon-xiazai:before {
 	content: "\e613";
-}
-
-.icon-morentupianccccccpx:before {
-	content: "\e612";
 }
 
 .icon-icon-:before {
@@ -46,8 +26,4 @@
 
 .icon-qiehuan:before {
 	content: "\e628";
-}
-
-.icon-copy:before {
-	content: "\e64d";
 }
