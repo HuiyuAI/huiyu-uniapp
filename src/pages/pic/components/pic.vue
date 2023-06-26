@@ -1,84 +1,89 @@
 <template>
   <view class="container">
-    <view class="wrap">
-      <u-waterfall v-model="flowList" ref="uWaterfall">
-        <template v-slot:left="{leftList}">
-          <view class="demo-warter" v-for="(item, index) in leftList" :key="index">
-            <u-lazy-load threshold="-450" border-radius="10" :image="item.image" :index="index"></u-lazy-load>
+    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList">
+      <!-- 第一列数据 -->
+      <template v-slot:list1>
+        <view>
+          <view v-for="(item, index) in list1" :key="item.id" class="img-box">
+            <view class="image">
+              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            </view>
           </view>
-        </template>
-        <template v-slot:right="{rightList}">
-          <view class="demo-warter" v-for="(item, index) in rightList" :key="index">
-            <u-lazy-load threshold="-450" border-radius="10" :image="item.image" :index="index"></u-lazy-load>
+        </view>
+      </template>
+      <!-- 第二列数据 -->
+      <template v-slot:list2>
+        <view>
+          <view v-for="(item, index) in list2" :key="item.id" class="img-box">
+            <view class="image">
+              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            </view>
           </view>
-        </template>
-      </u-waterfall>
-      <u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
-    </view>
+        </view>
+      </template>
+      <!-- 第三列数据 -->
+      <template v-slot:list3>
+        <view>
+          <view v-for="(item, index) in list3" :key="item.id" class="img-box">
+            <view class="image">
+              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            </view>
+          </view>
+        </view>
+      </template>
+    </uv-waterfall>
+
   </view>
 </template>
 
 <script>
+import {getPicPage} from "@/api/pic";
+
 export default {
   name: "pic",
   data() {
     return {
-      loadStatus: 'loadmore',
-      flowList: [],
-      list: [
-        {
-          image: 'http://pic.sc.chinaz.com/Files/pic/pic9/202002/zzpic23327_s.jpg',
-        },
-        {
-          image: 'http://pic.sc.chinaz.com/Files/pic/pic9/202002/zzpic23325_s.jpg',
-        },
-        {
-          image: 'http://pic2.sc.chinaz.com/Files/pic/pic9/202002/hpic2119_s.jpg',
-        },
-        {
-          image: 'http://pic2.sc.chinaz.com/Files/pic/pic9/202002/zzpic23369_s.jpg',
-        },
-      ]
+      list: [],
+      list1: [],
+      list2: [],
+      list3: []
     }
   },
-  created() {
-    this.addRandomData()
+  mounted() {
+    this.getPicPage()
   },
   onPullDownRefresh() {
   },
-  onReachBottom() {
-    this.loadStatus = 'loading';
-    // 模拟数据加载
-    setTimeout(() => {
-      this.addRandomData();
-      this.loadStatus = 'loadmore';
-    }, 1000)
-  },
   methods: {
-    addRandomData() {
-      for (let i = 0; i < 10; i++) {
-        let index = this.$u.random(0, this.list.length - 1);
-        // 先转成字符串再转成对象，避免数组对象引用导致数据混乱
-        let item = JSON.parse(JSON.stringify(this.list[index]))
-        item.id = this.$u.guid();
-        this.flowList.push(item);
-      }
+    changeList(e) {
+      this[e.name].push(e.value)
+    },
+    getPicPage() {
+      getPicPage(1, 100, Date.now()).then(res => {
+        console.log(res)
+        res.records.forEach(item => {
+          const img = {
+            id: item.uuid,
+            image: item.path
+          }
+          this.list.push(img)
+        })
+      })
     },
   }
 }
 </script>
 
 <style scoped lang="scss">
-.demo-warter {
-  border-radius: 8px;
-  margin: 5px;
-  background-color: #ffffff;
-  padding: 8px;
-  position: relative;
+.container {
+  padding: 0rpx 12rpx;
 }
 
-.demo-image {
-  width: 100%;
-  border-radius: 4px;
+.img-box {
+  margin-bottom: 3px;
+
+  image {
+    border-radius: 6px;
+  }
 }
 </style>
