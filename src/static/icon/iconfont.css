@@ -13,6 +13,71 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-filter:before {
+  content: "\e69c";
+}
+
+.icon-deletefill:before {
+  content: "\e6a6";
+}
+
+.icon-delete:before {
+  content: "\e6b4";
+}
+
+.icon-squarecheckfill:before {
+  content: "\e6d4";
+}
+
+.icon-square:before {
+  content: "\e6d5";
+}
+
+.icon-squarecheck:before {
+  content: "\e6d6";
+}
+
+.icon-infofill:before {
+  content: "\e6e4";
+}
+
+.icon-info:before {
+  content: "\e6e5";
+}
+
+.icon-forwardfill:before {
+  content: "\e6ea";
+}
+
+.icon-forward:before {
+  content: "\e6eb";
+}
+
+.icon-appreciate_light:before {
+  content: "\e7e1";
+}
+
+.icon-favor_light:before {
+  content: "\e7e2";
+}
+
+.icon-appreciate_fill_light:before {
+  content: "\e7e3";
+}
+
+.icon-favor_fill_light:before {
+  content: "\e7ec";
+}
+
+.icon-ic_batch_default24px:before {
+  content: "\e617";
+}
+
+.icon-piliangcaozuo:before {
+  content: "\e645";
+}
+
 .icon-shuaxin:before {
   content: "\e68c";
 }
+

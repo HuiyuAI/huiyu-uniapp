@@ -70,10 +70,10 @@
       </view>
 
       <!-- 高级设置 -->
-      <view class="advanced-box">
+      <view class="action-box">
         <view class="left">高级设置</view>
         <view class="right">
-          <u-switch v-model="enableAdvanced" size="40" active-color="#2979ff"></u-switch>
+          <u-switch v-model="enableAdvanced" size="40" active-color="#2979ff" inactive-color="#555555"></u-switch>
         </view>
       </view>
 
@@ -373,7 +373,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .com-pic-draw {
   padding: 0rpx 20rpx;
 }
@@ -612,7 +612,7 @@ export default {
   }
 }
 
-.advanced-box {
+.action-box {
   display: flex;
   align-items: center;
   justify-content: space-between;

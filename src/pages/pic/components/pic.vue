@@ -1,5 +1,16 @@
 <template>
   <view class="container">
+    <!-- 高级设置 -->
+    <view class="action-box">
+      <view class="left">作品数量: {{ totalCount }} / 1000</view>
+      <view class="right">
+        <view class="item" @click="batchAction">
+          <text class="iconfont icon-ic_batch_default24px"></text>
+          批量
+        </view>
+      </view>
+    </view>
+
     <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList">
       <!-- 第一列数据 -->
       <template v-slot:list1>
@@ -43,6 +54,7 @@ export default {
   name: "pic",
   data() {
     return {
+      totalCount: 0,
       list: [],
       list1: [],
       list2: [],
@@ -60,7 +72,7 @@ export default {
     },
     getPicPage() {
       getPicPage(1, 100, Date.now()).then(res => {
-        console.log(res)
+        this.totalCount = res.total
         res.records.forEach(item => {
           const img = {
             id: item.uuid,
@@ -70,6 +82,9 @@ export default {
         })
       })
     },
+    batchAction() {
+
+    },
   }
 }
 </script>
@@ -78,6 +93,34 @@ export default {
 .container {
   padding: 0rpx 12rpx;
 }
+
+.action-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20rpx 10rpx 20rpx;
+
+  .left {
+    font-size: 12px;
+  }
+
+  .right {
+    display: flex;
+    font-size: 14px;
+
+    .item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .iconfont {
+        font-size: 16px;
+        margin-right: 4rpx;
+      }
+    }
+  }
+}
+
 
 .img-box {
   margin-bottom: 3px;
