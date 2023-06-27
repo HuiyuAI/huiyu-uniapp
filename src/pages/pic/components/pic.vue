@@ -16,8 +16,8 @@
       <template v-slot:list1>
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
-            <view class="image">
-              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            <view>
+              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
         </view>
@@ -26,8 +26,8 @@
       <template v-slot:list2>
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
-            <view class="image">
-              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            <view>
+              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
         </view>
@@ -36,8 +36,8 @@
       <template v-slot:list3>
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
-            <view class="image">
-              <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+            <view>
+              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
         </view>
@@ -49,9 +49,11 @@
 
 <script>
 import {getPicPage} from "@/api/pic";
+import ZeroLazyLoad from "@/components/zero-lazy-load/zero-lazy-load.vue";
 
 export default {
   name: "pic",
+  components: {ZeroLazyLoad},
   data() {
     return {
       totalCount: 0,
@@ -71,7 +73,8 @@ export default {
       this[e.name].push(e.value)
     },
     getPicPage() {
-      getPicPage(1, 100, Date.now()).then(res => {
+      // TODO 分页
+      getPicPage(1, 300, Date.now()).then(res => {
         this.totalCount = res.total
         res.records.forEach(item => {
           const img = {
@@ -121,12 +124,7 @@ export default {
   }
 }
 
-
 .img-box {
-  margin-bottom: 3px;
-
-  image {
-    border-radius: 6px;
-  }
+  margin-bottom: 12rpx;
 }
 </style>
