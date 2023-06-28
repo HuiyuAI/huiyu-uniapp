@@ -527,7 +527,7 @@ export default {
         flex-direction: column;
         align-items: center;
         border-radius: 10rpx;
-        border: 2px solid #555555;
+        border: 2px solid $huiyu-color-normal;
 
         .item-shape-box {
           width: 60rpx;
@@ -537,7 +537,7 @@ export default {
           align-items: center;
 
           .item-shape {
-            background-color: #555555;
+            background-color: $huiyu-color-normal;
             border-radius: 5rpx;
           }
         }
@@ -571,7 +571,7 @@ export default {
         display: flex;
         justify-content: center;
         padding: 10rpx 0;
-        background-color: #555555;
+        background-color: $huiyu-color-normal;
         border-radius: 10rpx;
         font-size: 14px;
       }
@@ -600,7 +600,7 @@ export default {
         display: flex;
         justify-content: center;
         padding: 10rpx 0;
-        background-color: #555555;
+        background-color: $huiyu-color-normal;
         border-radius: 10rpx;
         font-size: 14px;
       }

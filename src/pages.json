@@ -46,6 +46,7 @@
       "path": "pages/pic/index",
       "style": {
         "navigationBarTitleText": "画夹",
+        "backgroundTextStyle": "light",
         "enablePullDownRefresh": true
       }
     },
@@ -53,6 +54,7 @@
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的",
+        "backgroundTextStyle": "light",
         "enablePullDownRefresh": true
       }
     }

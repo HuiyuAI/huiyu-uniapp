@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <Pic/>
+    <Pic ref="pic"/>
   </view>
 </template>
 
@@ -13,6 +13,12 @@ export default {
     return {}
   },
   onLoad() {
+  },
+  onPullDownRefresh() {
+    this.$refs.pic.pullDownRefresh()
+  },
+  onReachBottom() {
+    this.$refs.pic.reachBottom()
   },
   methods: {}
 }

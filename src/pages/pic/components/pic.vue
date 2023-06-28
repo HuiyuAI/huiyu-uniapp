@@ -11,7 +11,7 @@
       </view>
     </view>
 
-    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList">
+    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish">
       <!-- 第一列数据 -->
       <template v-slot:list1>
         <view>
@@ -44,44 +44,81 @@
       </template>
     </uv-waterfall>
 
+    <u-divider v-if="isLastPage && waterfallFinish" bg-color="transparent" color="#555555" border-color="#555555" half-width="20%" margin-top="20" margin-bottom="20">没有更多了</u-divider>
+    <view class="safe-area"></view>
   </view>
 </template>
 
 <script>
 import {getPicPage} from "@/api/pic";
-import ZeroLazyLoad from "@/components/zero-lazy-load/zero-lazy-load.vue";
 
 export default {
   name: "pic",
-  components: {ZeroLazyLoad},
   data() {
     return {
+      pageNum: 1,
+      pageSize: 100,
+      queryDeadline: null,
+      isLastPage: false,
+      waterfallFinish: false,
       totalCount: 0,
       list: [],
       list1: [],
       list2: [],
-      list3: []
+      list3: [],
     }
   },
   mounted() {
-    this.getPicPage()
-  },
-  onPullDownRefresh() {
+    this.getPicPage(true)
   },
   methods: {
     changeList(e) {
       this[e.name].push(e.value)
     },
-    getPicPage() {
-      // TODO 分页
-      getPicPage(1, 300, Date.now()).then(res => {
-        this.totalCount = res.total
+    finish() {
+      this.waterfallFinish = true
+    },
+    pullDownRefresh() {
+      this.pageNum = 1
+      this.isLastPage = false
+      this.getPicPage(true, true)
+    },
+    reachBottom() {
+      this.getPicPage()
+    },
+    getPicPage(isFirst, isRefresh) {
+      if (this.isLastPage) return
+      this.waterfallFinish = false
+      if (isFirst) {
+        this.queryDeadline = Date.now()
+      }
+      getPicPage(this.pageNum++, this.pageSize, this.queryDeadline).then(res => {
+        if (isFirst) {
+          this.totalCount = res.total
+          this.list = []
+          this.$refs.waterfall.clear()
+          this.list1 = []
+          this.list2 = []
+          this.list3 = []
+        }
+        // 到了最后一页
+        if (res.records.length < this.pageSize) {
+          this.isLastPage = true
+        }
+        if (isRefresh) {
+          setTimeout(() => {
+            uni.stopPullDownRefresh()
+          }, 500);
+        }
         res.records.forEach(item => {
           const img = {
             id: item.uuid,
-            image: item.path
+            image: item.path,
+            status: item.status
           }
-          this.list.push(img)
+          this.$nextTick(() => {
+            this.list.push(img)
+          })
         })
       })
     },
@@ -126,5 +163,9 @@ export default {
 
 .img-box {
   margin-bottom: 12rpx;
+}
+
+.safe-area {
+  padding-bottom: 1px;
 }
 </style>
