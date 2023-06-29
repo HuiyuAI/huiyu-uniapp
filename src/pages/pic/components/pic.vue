@@ -16,7 +16,7 @@
       <template v-slot:list1>
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
-            <view>
+            <view @click="toDetailPage(item.id)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -26,7 +26,7 @@
       <template v-slot:list2>
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
-            <view>
+            <view @click="toDetailPage(item.id)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -36,7 +36,7 @@
       <template v-slot:list3>
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
-            <view>
+            <view @click="toDetailPage(item.id)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -124,6 +124,11 @@ export default {
     },
     batchAction() {
 
+    },
+    toDetailPage(uuid) {
+      uni.navigateTo({
+        url: `/pages/detail/index?uuid=${uuid}`,
+      })
     },
   }
 }

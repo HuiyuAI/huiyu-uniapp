@@ -1,5 +1,5 @@
 <template>
-  <view class="content">
+  <view>
     <!-- 通知 -->
     <view class="notice">
       <u-notice-bar mode="vertical" duration="3000" type="none" :list="noticeList" color="#969696"></u-notice-bar>
@@ -7,7 +7,6 @@
     <!-- tab-item -->
     <Draw/>
   </view>
-
 </template>
 
 <script>
@@ -61,7 +60,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .notice {
   margin-bottom: 20rpx;
 }

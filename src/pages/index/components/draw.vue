@@ -676,7 +676,7 @@ export default {
   box-shadow: 0 0 3px 3px rgba(72, 219, 251, 0.3), 0 0 5px 5px rgba(72, 219, 251, 0.3);
 
   button {
-    background: linear-gradient(135deg, hsl(170, 80%, 70%), hsl(200, 80%, 70%), hsl(250, 80%, 70%));
+    background: $huiyu-color-button;
     color: black;
     border-radius: 100rpx;
     font-size: 30rpx;
