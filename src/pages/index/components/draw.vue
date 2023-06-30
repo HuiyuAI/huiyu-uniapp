@@ -160,7 +160,7 @@ export default {
       enableAdvanced: false,
       seed: null,
       sizeList: [
-        {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像框', selected: true},
+        {ratio: '1:1', width: 15, height: 15, val: 1, desc: '头像', selected: true},
         {ratio: '3:4', width: 15, height: 20, val: 2, desc: '社交媒体', selected: false},
         {ratio: '4:3', width: 20, height: 15, val: 3, desc: '文章配图', selected: false},
         {ratio: '9:16', width: 15, height: 26, val: 4, desc: '手机壁纸', selected: false},
@@ -173,10 +173,9 @@ export default {
         {val: 4, selected: false},
       ],
       qualityList: [
-        {title: '普通', val: 1, selected: true},
-        {title: '高清', val: 2, selected: false},
-        {title: '超高清', val: 3, selected: false},
-        {title: '精绘', val: 4, selected: false},
+        {title: '高清', val: 1, selected: true},
+        {title: '超清', val: 2, selected: false},
+        {title: '超高清4K', val: 3, selected: false},
       ],
       generatesImages: [
         'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
@@ -577,6 +576,8 @@ export default {
       }
 
       .generate-sel {
+        color: black;
+        font-weight: bold;
         background: $huiyu-color-button;
       }
     }
@@ -606,6 +607,8 @@ export default {
       }
 
       .quality-sel {
+        color: black;
+        font-weight: bold;
         background: $huiyu-color-button;
       }
     }
