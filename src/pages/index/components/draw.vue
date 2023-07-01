@@ -119,7 +119,7 @@
       <view class="result-box">
         <view class="item-section">生成结果(点击图片长按保存)</view>
         <view class="result-content">
-          <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index" @click="clickImg(generatesImages,index)">
+          <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index">
             <image :src="item" mode="aspectFit"></image>
             <view class="download" @click.stop="clickDown(item,index)">
               <!--              <text class="iconfont icon-xiazai"></text>-->
@@ -308,21 +308,6 @@ export default {
       //   mask: true
       // });
 
-    },
-    /**
-     * 预览
-     */
-    clickImg(urls, index) {
-      wx.previewImage({
-        urls: urls,
-        current: index,
-        success: function (res) {
-        },
-        fail: function (res) {
-        },
-        complate: function (res) {
-        }
-      })
     },
     /**
      * 下载

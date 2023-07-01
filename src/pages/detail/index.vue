@@ -3,7 +3,8 @@
     <view class="header">
       <view class="image" v-if="!imageLoadError">
         <view :style="{width: '100%',paddingBottom: aspectRatio + '%'}" v-if="!imageLoaded"></view>
-        <u-image :src="image" @load="imgLoaded" @error="imgError" bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
+        <u-image :src="image" @click="previewImage" @load="imgLoaded" @error="imgError" :show-menu-by-longpress="false"
+                 bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
       </view>
       <view class="error" v-else-if="imageLoadError">
         图片加载失败
@@ -118,6 +119,11 @@ export default {
     },
     imgError() {
       this.imageLoadError = true
+    },
+    previewImage() {
+      uni.previewImage({
+        urls: [this.image],
+      });
     },
   }
 }
