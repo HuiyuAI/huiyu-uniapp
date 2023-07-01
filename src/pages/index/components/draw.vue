@@ -15,7 +15,8 @@
         </view>
       </view>
       <view class="recommended-word-box">
-        <view class="recommended-word" @click="recommendedWord">
+        <!-- 节流 -->
+        <view class="recommended-word" @click="$u.throttle(recommendedWord, 1000)">
           试试推荐词
           <text class="iconfont icon-shuaxin"></text>
         </view>
@@ -110,8 +111,8 @@
         </view>
       </view>
 
-      <!-- 提交 -->
-      <view class="submit-box" @click="clickSubmit">
+      <!-- 提交 节流-->
+      <view class="submit-box" @click="$u.throttle(clickSubmit, 2000)">
         <button>立即生成（消耗{{ integral }}积分）</button>
       </view>
 
@@ -121,9 +122,6 @@
         <view class="result-content">
           <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index">
             <image :src="item" mode="aspectFit"></image>
-            <view class="download" @click.stop="clickDown(item,index)">
-              <!--              <text class="iconfont icon-xiazai"></text>-->
-            </view>
           </view>
         </view>
       </view>
@@ -229,7 +227,7 @@ export default {
      * 随机推荐词
      */
     recommendedWord() {
-
+      this.formData.prompt = '随机推荐词' + this.$u.guid()
     },
     /**
      * 尺寸比例改变
@@ -309,50 +307,6 @@ export default {
       // });
 
     },
-    /**
-     * 下载
-     */
-    async clickDown(item, index) {
-      if (this.isBusying) {
-        return this.$utils.showToast("请稍后...")
-      }
-      this.isBusying = true;
-      uni.showLoading({
-        title: '图片解析中...',
-        mask: true
-      })
-      let img_path = await this.$utils.base64ToPath(item);
-
-      uni.hideLoading();
-      this.isBusying = false;
-
-      // #ifdef H5
-      let aLink = document.createElement('a');
-      let evt = document.createEvent("HTMLEvents");
-      evt.initEvent("click", true, true); //initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
-      aLink.download = new Date().getTime() + '.png';
-      aLink.href = img_path;
-      aLink.click();
-      // #endif
-
-      // #ifndef H5
-      uni.saveImageToPhotosAlbum({
-        filePath: img_path, //不支持网络地址
-        success: function () {
-          uni.showToast({
-            title: '保存成功',
-          });
-        },
-        fail(err) {
-          uni.showToast({
-            title: '保存失败',
-            icon: 'error'
-          });
-        }
-      });
-      // #endif
-    },
-
   }
 }
 </script>

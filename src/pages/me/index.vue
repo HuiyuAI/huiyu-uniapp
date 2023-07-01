@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="user-box" @click="$u.debounce(getUserProfile, 1000,true)">
+    <view class="user-box" @click="$u.throttle(getUserProfile, 1000)">
       <view class="u-flex">
         <view class="u-m-r-20">
           <u-avatar :src="userInfo.avatar" size="120"></u-avatar>
