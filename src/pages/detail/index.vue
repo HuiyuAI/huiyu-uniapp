@@ -2,7 +2,8 @@
   <view class="container">
     <view class="header">
       <view class="image" v-if="!imageLoadError">
-        <u-image :src="image" @error="imgError" bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
+        <view :style="{width: '100%',paddingBottom: aspectRatio + '%'}" v-if="!imageLoaded"></view>
+        <u-image :src="image" @load="imgLoaded" @error="imgError" bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
       </view>
       <view class="error" v-else-if="imageLoadError">
         图片加载失败
@@ -10,49 +11,9 @@
     </view>
 
     <view class="content">
-      <view class="item">
-        <span class="label">描述词：</span>
-        <span class="value">{{ prompt }}</span>
-      </view>
-      <view class="item">
-        <span class="label">生成时间：</span>
-        <span class="value">{{ createTime | date('yyyy-mm-dd hh:MM') }}</span>
-      </view>
-      <view class="item">
-        <span class="label">模型：</span>
-        <span class="value">{{ modelName }}</span>
-      </view>
-      <view class="item">
-        <span class="label">图片质量：</span>
-        <span class="value">{{ quality }}</span>
-      </view>
-      <view class="item">
-        <span class="label">图片比例：</span>
-        <span class="value">{{ ratio }}</span>
-      </view>
-      <view class="item">
-        <span class="label">宽度：</span>
-        <span class="value">{{ width }}</span>
-      </view>
-      <view class="item">
-        <span class="label">高度：</span>
-        <span class="value">{{ height }}</span>
-      </view>
-      <view class="item">
-        <span class="label">描述词相关度：</span>
-        <span class="value">{{ cfg }}</span>
-      </view>
-      <view class="item">
-        <span class="label">采样步数：</span>
-        <span class="value">{{ steps }}</span>
-      </view>
-      <view class="item">
-        <span class="label">随机种子：</span>
-        <span class="value">{{ seed }}</span>
-      </view>
-      <view class="item">
-        <span class="label">图片ID：</span>
-        <span class="value">{{ uuid }}</span>
+      <view class="item" v-for="(item,index) in content" :key="index">
+        <span class="label">{{ item.label }}：</span>
+        <span class="value">{{ item.value }}</span>
       </view>
     </view>
 
@@ -94,6 +55,7 @@ import {getPicDetail} from "@/api/pic";
 export default {
   data() {
     return {
+      imageLoaded: false,
       imageLoadError: false,
       uuid: '',
       image: '',
@@ -108,6 +70,26 @@ export default {
       cfg: '',
       steps: '',
       seed: '',
+    }
+  },
+  computed: {
+    aspectRatio() {
+      return (this.height / this.width) * 100
+    },
+    content() {
+      return [
+        {label: '描述词', value: this.prompt},
+        {label: '生成时间', value: this.$u.timeFormat(this.createTime, 'yyyy-mm-dd hh:MM')},
+        {label: '模型名称', value: this.modelName},
+        {label: '图片质量', value: this.quality},
+        {label: '图片比例', value: this.ratio},
+        {label: '宽度', value: this.width},
+        {label: '高度', value: this.height},
+        {label: '描述词相关度', value: this.cfg},
+        {label: '采样步数', value: this.steps},
+        {label: '随机种子', value: this.seed},
+        {label: '图片ID', value: this.uuid},
+      ]
     }
   },
   onLoad(option) {
@@ -131,9 +113,12 @@ export default {
         this.seed = res.seed
       })
     },
+    imgLoaded() {
+      this.imageLoaded = true
+    },
     imgError() {
       this.imageLoadError = true
-    }
+    },
   }
 }
 </script>
