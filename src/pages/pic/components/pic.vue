@@ -16,7 +16,7 @@
       <template v-slot:list1>
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
-            <view @click="toDetailPage(item.id)">
+            <view @click="toDetailPage(item)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -26,7 +26,7 @@
       <template v-slot:list2>
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
-            <view @click="toDetailPage(item.id)">
+            <view @click="toDetailPage(item)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -36,7 +36,7 @@
       <template v-slot:list3>
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
-            <view @click="toDetailPage(item.id)">
+            <view @click="toDetailPage(item)">
               <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
             </view>
           </view>
@@ -104,6 +104,10 @@ export default {
         // 到了最后一页
         if (res.records.length < this.pageSize) {
           this.isLastPage = true
+          if (res.records.length === 0) {
+            // 如果一条数据都没有，瀑布流组件不会触发finish事件，所以这里手动触发一下，让底部的没有更多了显示出来
+            this.waterfallFinish = true
+          }
         }
         if (isRefresh) {
           setTimeout(() => {
@@ -114,7 +118,9 @@ export default {
           const img = {
             id: item.uuid,
             image: item.path,
-            status: item.status
+            status: item.status,
+            originWidth: item.width,
+            originHeight: item.height,
           }
           this.$nextTick(() => {
             this.list.push(img)
@@ -125,9 +131,10 @@ export default {
     batchAction() {
 
     },
-    toDetailPage(uuid) {
+    toDetailPage(item) {
+      const query = this.$u.queryParams(item)
       uni.navigateTo({
-        url: `/pages/detail/index?uuid=${uuid}`,
+        url: `/pages/detail/index${query}`,
       })
     },
   }
