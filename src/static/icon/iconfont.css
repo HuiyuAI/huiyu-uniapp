@@ -13,6 +13,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-xiulian:before {
+  content: "\e6db";
+}
+
+.icon-meihua:before {
+  content: "\e622";
+}
+
+.icon-xiazai:before {
+  content: "\e600";
+}
+
+.icon-fenxiang:before {
+  content: "\e633";
+}
+
 .icon-filter:before {
   content: "\e69c";
 }

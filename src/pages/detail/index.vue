@@ -22,31 +22,30 @@
 
     <view class="footer">
       <view class="left">
-        <view class="item">
-          <u-icon name="home" :size="40"></u-icon>
-          <view class="text u-line-1">下载</view>
+        <view class="item" @click="$u.throttle(saveImage, 3000)">
+          <text class="iconfont icon-xiazai"></text>
+          <view class="u-line-1">下载</view>
         </view>
         <view class="item">
-          <u-icon name="server-fill" :size="40"></u-icon>
-          <view class="text u-line-1">删除</view>
+          <text class="iconfont icon-xiulian"></text>
+          <view class="u-line-1">修脸</view>
         </view>
         <view class="item">
-          <u-icon name="shopping-cart" :size="40"></u-icon>
-          <view class="text u-line-1">精绘</view>
+          <text class="iconfont icon-meihua"></text>
+          <view class="u-line-1">精绘</view>
         </view>
         <view class="item">
-          <u-icon name="shopping-cart" :size="40"></u-icon>
-          <view class="text u-line-1">修脸</view>
-        </view>
-        <view class="item">
-          <u-icon name="shopping-cart" :size="40"></u-icon>
-          <view class="text u-line-1">海报</view>
+          <text class="iconfont icon-fenxiang"></text>
+          <view class="u-line-1">分享</view>
         </view>
       </view>
       <view class="right">
         <button>再画一张</button>
       </view>
     </view>
+
+    <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
+    <u-toast ref="uToast"/>
   </view>
 </template>
 
@@ -56,8 +55,6 @@ import {getPicDetail} from "@/api/pic";
 export default {
   data() {
     return {
-      imageLoaded: false,
-      imageLoadError: false,
       uuid: '',
       image: '',
       status: '',
@@ -71,6 +68,9 @@ export default {
       cfg: '',
       steps: '',
       seed: '',
+      imageLoaded: false,
+      imageLoadError: false,
+      albumPermissionRequest: false,
     }
   },
   computed: {
@@ -124,6 +124,56 @@ export default {
       uni.previewImage({
         urls: [this.image],
       });
+    },
+    saveImage() {
+      uni.getSetting({
+        success: res => {
+          console.log(res.authSetting['scope.writePhotosAlbum'])
+          if (res.authSetting['scope.writePhotosAlbum'] === undefined) {
+            // 如果是undefined，则是第一次授权，直接申请权限
+            uni.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                this.saveImageToPhotosAlbum()
+              },
+            })
+          } else if (res.authSetting['scope.writePhotosAlbum'] === false) {
+            // 如果是false，则是用户拒绝过授权，模态框提示用户进入权限设置界面打开授权
+            this.albumPermissionRequest = true
+          } else {
+            // 已经授权，直接保存图片
+            this.saveImageToPhotosAlbum()
+          }
+        }
+      })
+    },
+    saveImageToPhotosAlbum() {
+      uni.downloadFile({
+        url: this.image,
+        success: res => {
+          if (res.statusCode === 200) {
+            uni.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: () => {
+                this.$refs.uToast.show({
+                  title: '保存图片成功！',
+                  type: 'success',
+                })
+              },
+              fail: () => {
+                this.$refs.uToast.show({
+                  title: '保存图片失败！',
+                  type: 'error',
+                })
+              }
+            })
+          }
+        },
+      })
+    },
+    toOpenSetting() {
+      // 调起小程序权限设置界面，让用户开启访问相册权限
+      uni.openSetting()
     },
   }
 }
@@ -184,19 +234,24 @@ export default {
   .left {
     display: flex;
     font-size: 24rpx;
+    margin-left: 40rpx;
 
     .item {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin: 0 30rpx;
+      margin: 0 34rpx;
+
+      &:first-child {
+        margin-left: 0rpx;
+      }
     }
   }
 
   .right {
     margin-left: auto;
-    margin-right: 30rpx;
+    margin-right: 40rpx;
 
     button {
       background: $huiyu-color-button;
