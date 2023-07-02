@@ -17,7 +17,12 @@
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+                <view class="img-status-text">
+                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                </view>
+              </view>
             </view>
           </view>
         </view>
@@ -27,7 +32,12 @@
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+                <view class="img-status-text">
+                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                </view>
+              </view>
             </view>
           </view>
         </view>
@@ -37,7 +47,12 @@
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+                <view class="img-status-text">
+                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                </view>
+              </view>
             </view>
           </view>
         </view>
@@ -67,6 +82,25 @@ export default {
       list2: [],
       list3: [],
     }
+  },
+  computed: {
+    aspectRatio() {
+      return function (item) {
+        return (item.originHeight / item.originWidth) * 100
+      }
+    },
+    imgStatusText() {
+      return function (status) {
+        switch (status) {
+          case 'GENERATING':
+            return '图片正在生成中'
+          case 'DISCARD':
+            return '图片生成失败<br>积分已返还您的账户'
+          default:
+            return '异常错误'
+        }
+      }
+    },
   },
   mounted() {
     this.getPicPage(true)
@@ -175,6 +209,23 @@ export default {
 
 .img-box {
   margin-bottom: 12rpx;
+
+  .img-status-box {
+    position: relative;
+    background-color: #1a1a1a;
+
+    .img-status-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 22rpx;
+      color: #969696;
+    }
+  }
 }
 
 .safe-area {
