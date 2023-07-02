@@ -111,19 +111,9 @@
         </view>
       </view>
 
-      <!-- 提交 节流-->
+      <!-- 提交 节流 -->
       <view class="submit-box" @click="$u.throttle(clickSubmit, 2000)">
         <button>立即生成（消耗{{ integral }}积分）</button>
-      </view>
-
-      <!-- 生成结果 -->
-      <view class="result-box">
-        <view class="item-section">生成结果(点击图片长按保存)</view>
-        <view class="result-content">
-          <view class="res-img-box" v-for="(item,index) in generatesImages" :key="index">
-            <image :src="item" mode="aspectFit"></image>
-          </view>
-        </view>
       </view>
 
       <view class="safe-area"></view>
@@ -174,11 +164,6 @@ export default {
         {title: '高清', val: 1, selected: true},
         {title: '超清', val: 2, selected: false},
         {title: '超高清4K', val: 3, selected: false},
-      ],
-      generatesImages: [
-        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
-        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
-        'https://huiyucdn.naccl.top/static/c116d3c1-9bd7-4f3c-81a2-3d1a938906af.jpg!/fw/480',
       ],
     }
   },

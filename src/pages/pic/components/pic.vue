@@ -17,8 +17,8 @@
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
                   <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
                 </view>
@@ -32,8 +32,8 @@
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
                   <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
                 </view>
@@ -47,8 +47,8 @@
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{width: '100%', paddingBottom: aspectRatio(item) + '%'}">
+              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
                   <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
                 </view>
@@ -97,7 +97,7 @@ export default {
           case 'DISCARD':
             return '图片生成失败<br>积分已返还您的账户'
           default:
-            return '异常错误'
+            return '图片加载失败'
         }
       }
     },
@@ -162,6 +162,9 @@ export default {
         })
       })
     },
+    imgLoadError(item) {
+      item.status = 'ERROR'
+    },
     batchAction() {
 
     },
@@ -213,6 +216,8 @@ export default {
   .img-status-box {
     position: relative;
     background-color: #1a1a1a;
+    width: 100%;
+    border-radius: 6px;
 
     .img-status-text {
       position: absolute;

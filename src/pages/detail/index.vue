@@ -1,13 +1,17 @@
 <template>
   <view class="container">
     <view class="header">
-      <view class="image" v-if="!imageLoadError">
-        <view :style="{width: '100%',paddingBottom: aspectRatio + '%'}" v-if="!imageLoaded"></view>
-        <u-image :src="image" @click="previewImage" @load="imgLoaded" @error="imgError" :show-menu-by-longpress="false"
-                 bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
+      <view class="image-box" v-if="status === 'GENERATED'" :style="{paddingBottom: aspectRatio + '%'}">
+        <view class="image">
+          <u-image :src="image" @click="previewImage" @error="imgLoadError" :show-menu-by-longpress="false"
+                   bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
+        </view>
       </view>
-      <view class="error" v-else-if="imageLoadError">
-        图片加载失败
+
+      <view v-else class="img-status-box">
+        <view class="img-status-text">
+          <view class="u-text-center" v-html="imgStatusText"></view>
+        </view>
       </view>
     </view>
 
@@ -68,7 +72,6 @@ export default {
       cfg: '',
       steps: '',
       seed: '',
-      imageLoaded: false,
       imageLoadError: false,
       albumPermissionRequest: false,
     }
@@ -76,6 +79,16 @@ export default {
   computed: {
     aspectRatio() {
       return (this.height / this.width) * 100
+    },
+    imgStatusText() {
+      switch (this.status) {
+        case 'GENERATING':
+          return '图片正在生成中'
+        case 'DISCARD':
+          return '图片生成失败<br>积分已返还您的账户'
+        default:
+          return '图片加载失败'
+      }
     },
     content() {
       return [
@@ -114,11 +127,8 @@ export default {
         this.seed = res.seed
       })
     },
-    imgLoaded() {
-      this.imageLoaded = true
-    },
-    imgError() {
-      this.imageLoadError = true
+    imgLoadError() {
+      this.status = 'ERROR'
     },
     previewImage() {
       uni.previewImage({
@@ -181,15 +191,36 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  .error {
+  .image-box {
+    position: relative;
     width: 100%;
-    padding: 50% 0;
+
+    .image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .img-status-box {
+    position: relative;
     background-color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24rpx;
-    color: #969696;
+    width: 100%;
+    padding-bottom: 100%;
+
+    .img-status-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 24rpx;
+      color: #969696;
+    }
   }
 }
 
