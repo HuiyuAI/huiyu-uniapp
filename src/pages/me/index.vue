@@ -7,12 +7,9 @@
         </view>
         <view class="u-flex-1">
           <view class="u-font-18 u-p-b-20">
-            {{ userInfo.username }}
-            <u-icon name="man" color="#2979ff" size="28" v-if="userInfo.gender===0"></u-icon>
-            <u-icon name="woman" color="#fd79a8" size="28" v-else-if="userInfo.gender===1"></u-icon>
-            <u-tag text="学校管理员" type="primary" v-if="userInfo.role==='ROLE_ADMIN'" class="role-tag"/>
+            {{ userInfo.nickname }}
           </view>
-          <view class="u-font-14 u-tips-color">ID: {{ userInfo.id }}</view>
+          <view class="u-font-14 u-tips-color">ID: {{ userInfo.userId }}</view>
         </view>
       </view>
     </view>
@@ -30,11 +27,9 @@ export default {
   data() {
     return {
       userInfo: {
-        id: 0,
-        username: '未登录',
+        userId: 0,
+        nickname: '未登录',
         avatar: '/static/images/logout_avatar.jpg',
-        gender: 2,
-        role: 'ROLE_USER'
       },
       scrollTop: 0,
     }
@@ -72,16 +67,14 @@ export default {
         this.userInfo = userInfo
       } else {
         this.userInfo = {
-          id: 0,
-          username: '未登录',
+          userId: 0,
+          nickname: '未登录',
           avatar: '/static/images/logout_avatar.jpg',
-          gender: 2,
-          role: 'ROLE_USER'
         }
       }
     },
     getUserProfile() {
-      if (this.userInfo.id !== 0) {
+      if (this.userInfo.userId !== 0) {
         return
       }
       // 获取用户信息
@@ -110,7 +103,7 @@ export default {
           login(data).then(res => {
             console.log(res)
             const userInfo = (
-                ({id, openid, username, avatar, gender, role}) => ({id, openid, username, avatar, gender, role})
+                ({userId, openid, nickname, avatar}) => ({userId, openid, nickname, avatar})
             )(res)
             uni.setStorageSync('userInfo', userInfo)
             uni.setStorageSync('access_token', res.access_token)

@@ -138,7 +138,6 @@ export default {
     saveImage() {
       uni.getSetting({
         success: res => {
-          console.log(res.authSetting['scope.writePhotosAlbum'])
           if (res.authSetting['scope.writePhotosAlbum'] === undefined) {
             // 如果是undefined，则是第一次授权，直接申请权限
             uni.authorize({

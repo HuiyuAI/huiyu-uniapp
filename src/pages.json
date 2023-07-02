@@ -66,7 +66,7 @@
     }
   ],
   "condition": {
-    "current": 1,
+    "current": 2,
     "list": [
       {
         "name": "pic",
@@ -75,6 +75,10 @@
       {
         "name": "detail",
         "path": "pages/detail/index"
+      },
+      {
+        "name": "me",
+        "path": "pages/me/index"
       }
     ]
   }
