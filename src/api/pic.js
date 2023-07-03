@@ -2,7 +2,7 @@ import axios from "@/util/request";
 
 export function getPicPage(pageNum, pageSize, queryDeadline) {
   return axios({
-    url: '/pic/page',
+    url: '/service/pic/page',
     method: 'GET',
     params: {
       pageNum,
@@ -14,7 +14,7 @@ export function getPicPage(pageNum, pageSize, queryDeadline) {
 
 export function getPicDetail(uuid) {
   return axios({
-    url: '/pic/get',
+    url: '/service/pic/get',
     method: 'GET',
     params: {
       uuid

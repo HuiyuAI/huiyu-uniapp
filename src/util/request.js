@@ -51,7 +51,7 @@ function logout() {
   refreshSubscribers = []
   uni.clearStorageSync()
   uni.showToast({
-    title: 'token过期，请重新登录',
+    title: '登录状态已失效，请重新登录',
     icon: 'none'
   })
 }
@@ -78,7 +78,6 @@ request.interceptors.request.use(config => {
             isRefreshing = true
             //刷新token
             refreshToken(uni.getStorageSync('refresh_token')).then(res => {
-              console.log(res)
               const userInfo = (
                   ({id, openid, username, avatar, gender, role}) => ({id, openid, username, avatar, gender, role})
               )(res)
@@ -115,7 +114,6 @@ request.interceptors.request.use(config => {
       return config
     },
     error => {
-      console.log(error)
       return Promise.reject(error)
     }
 )
@@ -124,7 +122,6 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
       const res = response.data
       if (res.code !== 200) {
-        console.log(res)
         const msg = res.msg || 'Error'
         uni.showToast({
           title: msg,

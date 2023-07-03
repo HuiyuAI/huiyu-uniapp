@@ -101,7 +101,6 @@ export default {
 
           // 保存用户信息和token
           login(data).then(res => {
-            console.log(res)
             const userInfo = (
                 ({userId, openid, nickname, avatar}) => ({userId, openid, nickname, avatar})
             )(res)

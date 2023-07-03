@@ -270,7 +270,6 @@ export default {
     // 由父组件生命周期onReachBottom发出，目的是让页面到底时，保证所有图片都进行加载，做到绝对稳定且可靠
     this.$nextTick(() => {
       uni.$once('onReachBottom', () => {
-        // console.log('触底监听')
         if (!this.isShow) this.isShow = true;
       });
     })
