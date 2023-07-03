@@ -1,5 +1,5 @@
 <template>
-  <view class="com-pic-draw">
+  <view class="container">
     <scroll-view scroll-y="true">
       <!-- 正向描述词 -->
       <view class="input-item" style="margin-top: 0">
@@ -120,6 +120,8 @@
 
       <view class="safe-area"></view>
     </scroll-view>
+
+    <u-toast ref="uToast"/>
   </view>
 </template>
 
@@ -273,33 +275,34 @@ export default {
     /**
      * 开始生成
      */
-    async clickSubmit() {
+    clickSubmit() {
       if (!this.formData.prompt) {
-        return this.$utils.showToast("请输入画面描述")
+        this.$refs.uToast.show({
+          title: '请输入画面描述',
+          type: 'default',
+        })
+        return
       }
 
-      // if (this.isBusying) {
-      //   return this.$utils.showToast("请稍后...")
-      // }
+      uni.showLoading({
+        title: '正在提交任务中...',
+        mask: true
+      });
 
-      console.log(this.formData)
-      // txt2img(this.formData).then(res => {
-      //   console.log(res)
-      // })
-
-      // this.isBusying = true;
-      // uni.showLoading({
-      //   title: '正在生成...',
-      //   mask: true
-      // });
-
+      txt2img(this.formData).then(res => {
+        console.log(res)
+      }).finally(() => {
+        setTimeout(() => {
+          uni.hideLoading()
+        }, 2000)
+      })
     },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.com-pic-draw {
+.container {
   padding: 0rpx 20rpx;
 }
 

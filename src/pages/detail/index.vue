@@ -112,11 +112,25 @@ export default {
     this.status = option.status
     this.width = option.originWidth
     this.height = option.originHeight
-    this.getPicDetail()
+
+    if (this.status === 'GENERATING') {
+      // 每2秒查询一次，第一次立即执行
+      this.getPicDetail()
+      if (this.status !== 'GENERATING') {
+        return
+      }
+      let timer = setInterval(() => {
+        this.getPicDetail()
+        if (this.status !== 'GENERATING') {
+          clearInterval(timer)
+        }
+      }, 2000)
+    }
   },
   methods: {
     getPicDetail() {
       getPicDetail(this.uuid).then(res => {
+        this.status = res.status
         this.prompt = res.prompt
         this.createTime = res.createTime
         this.modelName = res.modelName
