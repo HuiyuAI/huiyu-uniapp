@@ -74,6 +74,7 @@ export default {
       seed: '',
       imageLoadError: false,
       albumPermissionRequest: false,
+      statusPollTimer: null,
     }
   },
   computed: {
@@ -113,19 +114,25 @@ export default {
     this.width = option.originWidth
     this.height = option.originHeight
 
+    // 查询图片详情，第一次立即执行
+    this.getPicDetail()
+    if (this.status !== 'GENERATING') {
+      // 图片不是生成中状态，不需要轮询
+      return
+    }
     if (this.status === 'GENERATING') {
-      // 每2秒查询一次，第一次立即执行
-      this.getPicDetail()
-      if (this.status !== 'GENERATING') {
-        return
-      }
-      let timer = setInterval(() => {
+      // 每2秒查询一次
+      this.statusPollTimer = setInterval(() => {
         this.getPicDetail()
         if (this.status !== 'GENERATING') {
-          clearInterval(timer)
+          clearInterval(this.statusPollTimer)
         }
       }, 2000)
     }
+  },
+  onUnload() {
+    // 页面卸载时清除轮询器
+    clearInterval(this.statusPollTimer)
   },
   methods: {
     getPicDetail() {
