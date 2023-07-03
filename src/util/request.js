@@ -79,7 +79,7 @@ request.interceptors.request.use(config => {
             //刷新token
             refreshToken(uni.getStorageSync('refresh_token')).then(res => {
               const userInfo = (
-                  ({id, openid, username, avatar, gender, role}) => ({id, openid, username, avatar, gender, role})
+                  ({userId, openid, nickname, avatar}) => ({userId, openid, nickname, avatar})
               )(res)
               uni.setStorageSync('userInfo', userInfo)
               uni.setStorageSync('access_token', res.access_token)

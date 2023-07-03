@@ -8,7 +8,8 @@
           <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="formData.prompt" placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
+          <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="maxInput"
+                    placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
         </view>
         <view class="text-num-box">
           <view>{{ promptNum }}/{{ maxInput }}</view>
@@ -86,7 +87,8 @@
             <view class="title-desc">(负向描述词)</view>
           </view>
           <view class="text-area">
-            <textarea v-model="formData.negativePrompt" placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。" :maxlength="maxInput"></textarea>
+            <textarea v-model="formData.negativePrompt" :show-confirm-bar="false" :maxlength="maxInput"
+                      placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
           </view>
           <view class="text-num-box">
             <view>{{ negativePromptNum }}/{{ maxInput }}</view>
@@ -168,10 +170,10 @@ export default {
     }
   },
   watch: {
-    prompt(n, o) {
+    'formData.prompt'(n, o) {
       this.promptNum = n.length
     },
-    negativePrompt(n, o) {
+    'formData.negativePrompt'(n, o) {
       this.negativePromptNum = n.length
     },
   },
@@ -212,7 +214,7 @@ export default {
      * 随机推荐词
      */
     recommendedWord() {
-      this.formData.prompt = '随机推荐词' + this.$u.guid()
+      this.formData.prompt = this.$u.guid() + ',masterpiece,best quality,official art,extremely detailed CG unity 8k wallpaper, illustration, landscape, 1girl, solo, standing, long hair, from behind, outdoors, day, blue sky, cloud, plant, inverted reflection in water, rainbow, house, scenery, utility pole, power lines, summer, railing, cumulonimbus cloud, octans'
     },
     /**
      * 尺寸比例改变
@@ -327,8 +329,8 @@ export default {
     textarea {
       width: 100%;
       height: 120px;
-      font-size: 13px;
-      padding: 15rpx 0;
+      font-size: 14px;
+      line-height: 1.5;
     }
   }
 
@@ -612,8 +614,8 @@ export default {
 }
 
 .safe-area {
-  padding-bottom: 120rpx;
-  padding-bottom: calc(120rpx + constant(safe-area-inset-bottom));
-  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  padding-bottom: 150rpx;
+  padding-bottom: calc(150rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(150rpx + env(safe-area-inset-bottom));
 }
 </style>

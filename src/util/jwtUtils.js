@@ -4,7 +4,7 @@
  * @returns {any}
  */
 export function parseJwtPayload2Obj(jwt) {
-  return JSON.parse(decodeURIComponent(escape(atob(jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")))))
+  return JSON.parse(decodeURIComponent(escape(new Buffer.from(jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"), 'base64').toString('binary'))))
 }
 
 /**
