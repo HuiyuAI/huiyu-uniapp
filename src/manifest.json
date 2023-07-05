@@ -63,7 +63,8 @@
     "setting": {
       "urlCheck": false,
       "es6": true,
-      "checkSiteMap": false
+      "checkSiteMap": false,
+      "minified": true
     },
     "usingComponents": true
   },
