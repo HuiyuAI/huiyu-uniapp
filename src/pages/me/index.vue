@@ -1,6 +1,6 @@
 <template>
-  <view>
-    <view class="user-box" @click="$u.throttle(getUserProfile, 1000)">
+  <view class="user-center-wrapper">
+    <view @click="$u.throttle(getUserProfile, 1000)">
       <view class="u-flex">
         <view class="u-m-r-20">
           <u-avatar :src="userInfo.avatar" size="120"></u-avatar>
@@ -13,6 +13,9 @@
         </view>
       </view>
     </view>
+    <view class="user-center-container">
+      <Card title="常用功能" className="me-card" :columns="commonColumns"/>
+    </view>
 
     <u-top-tips ref="uTips"></u-top-tips>
     <u-toast ref="uToast"/>
@@ -22,8 +25,10 @@
 <script>
 import {login} from "@/api/login";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
+import Card from "./components/card.vue"
 
 export default {
+   components: { Card, },
   data() {
     return {
       userInfo: {
@@ -32,6 +37,7 @@ export default {
         avatar: '/static/images/logout_avatar.jpg',
       },
       scrollTop: 0,
+      commonColumns: [{ name: '邀请好友', icon: 'icon-appreciate_light'}, { name: '积分记录', icon: 'icon-ic_batch_default24px'}, { name: '邀请好友', icon: 'icon-fenxiang'},  ]
     }
   },
   onLoad() {
@@ -127,15 +133,18 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.user-box {
-  display: flex;
-  flex-direction: column;
-  padding: 20rpx 20rpx 10rpx 30rpx;
-
-  .role-tag {
-    float: right;
-    margin-right: 20rpx;
+<style lang="scss">
+.user-center{
+  &-wrapper{
+      padding: 20px;
+      font-size: 16px;
+      .role-tag {
+        float: right;
+        margin-right: 20px;
+      }
+      .me-card{
+        margin-top: 10px;
+      }
   }
 }
 </style>
