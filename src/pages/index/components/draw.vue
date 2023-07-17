@@ -115,7 +115,7 @@
 
       <!-- 提交 节流 -->
       <view class="submit-box" @click="$u.throttle(clickSubmit, 2000)">
-        <button>立即生成（消耗{{ integral }}积分）</button>
+        <button>立即生成（消耗{{ point }}积分）</button>
       </view>
 
       <view class="safe-area"></view>
@@ -143,7 +143,7 @@ export default {
         cfg: 9,
         seed: null,
       },
-      integral: 2,
+      point: 2,
       isBusying: false,
       modelList: [],
       promptNum: 0,

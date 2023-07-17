@@ -1,20 +1,25 @@
 <template>
-  <view class="user-center-wrapper">
-    <view @click="$u.throttle(getUserProfile, 1000)">
+  <view class="container">
+    <view class="user-box" @click="$u.throttle(getUserProfile, 1000)">
       <view class="u-flex">
         <view class="u-m-r-20">
-          <u-avatar :src="userInfo.avatar" size="120"></u-avatar>
+          <u-avatar :src="userInfo.avatar" size="100"></u-avatar>
         </view>
         <view class="u-flex-1">
-          <view class="u-font-18 u-p-b-20">
+          <view class="user-nickname u-p-b-10">
             {{ userInfo.nickname }}
           </view>
-          <view class="u-font-14 u-tips-color">ID: {{ userInfo.userId }}</view>
+          <view class="user-id u-tips-color">ID: {{ userInfo.userId }}</view>
         </view>
       </view>
     </view>
-    <view class="user-center-container">
-      <Card title="常用功能" className="me-card" :columns="commonColumns"/>
+
+    <view class="point">
+      积分：{{ userInfo.point }}
+    </view>
+
+    <view class="grid-box">
+      <Card :columns="commonColumns"/>
     </view>
 
     <u-top-tips ref="uTips"></u-top-tips>
@@ -28,16 +33,22 @@ import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
 
 export default {
-   components: { Card, },
+  components: {Card,},
   data() {
     return {
       userInfo: {
         userId: 0,
         nickname: '未登录',
         avatar: '/static/images/logout_avatar.jpg',
+        point: 0,
       },
       scrollTop: 0,
-      commonColumns: [{ name: '邀请好友', icon: 'icon-appreciate_light'}, { name: '积分记录', icon: 'icon-ic_batch_default24px'}, { name: '邀请好友', icon: 'icon-fenxiang'},  ]
+      commonColumns: [
+        {name: '积分记录', icon: 'icon-ic_batch_default24px', page: '/pages/record/index'},
+        {name: '邀请好友', icon: 'icon-appreciate_light'},
+        {name: '邀请好友', icon: 'icon-fenxiang'},
+        {name: '邀请好友', icon: 'icon-fenxiang'},
+      ]
     }
   },
   onLoad() {
@@ -133,18 +144,30 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.user-center{
-  &-wrapper{
-      padding: 20px;
-      font-size: 16px;
-      .role-tag {
-        float: right;
-        margin-right: 20px;
-      }
-      .me-card{
-        margin-top: 10px;
-      }
+<style scoped lang="scss">
+.container {
+  padding: 20rpx 20rpx;
+}
+
+.user-box {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20rpx 0 20rpx;
+
+  .user-nickname {
+    font-size: 32rpx;
   }
+
+  .user-id {
+    font-size: 24rpx;
+  }
+}
+
+.point {
+  margin: 20rpx;
+}
+
+.grid-box {
+  margin-top: 20rpx;
 }
 </style>
