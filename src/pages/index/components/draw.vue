@@ -154,8 +154,8 @@ export default {
       sizeList: [
         {ratio: '9:16', width: 15, height: 26, val: 1, desc: '手机壁纸', selected: true},
         {ratio: '16:9', width: 26, height: 15, val: 2, desc: '电脑壁纸', selected: false},
-        {ratio: '3:2', width: 22, height: 15, val: 4, desc: '文章配图', selected: false},
         {ratio: '2:3', width: 15, height: 22, val: 3, desc: '社交媒体', selected: false},
+        {ratio: '3:2', width: 22, height: 15, val: 4, desc: '文章配图', selected: false},
         {ratio: '1:1', width: 20, height: 20, val: 5, desc: '头像', selected: false},
       ],
       countList: [
