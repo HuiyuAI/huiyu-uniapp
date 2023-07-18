@@ -30,7 +30,7 @@
           <text class="iconfont icon-xiazai"></text>
           <view class="u-line-1">下载</view>
         </view>
-        <view class="item">
+        <view class="item" @click="$u.throttle(restoreFaceModalShow=true, 2000)">
           <text class="iconfont icon-xiulian"></text>
           <view class="u-line-1">修脸</view>
         </view>
@@ -48,6 +48,7 @@
       </view>
     </view>
 
+    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对模糊不清的人脸进行智能识别修复，将会生成一张新图，风景类场景请勿使用" show-cancel-button></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>
@@ -55,6 +56,7 @@
 
 <script>
 import {getPicDetail} from "@/api/pic";
+import {restoreFace} from "@/api/sd";
 
 export default {
   data() {
@@ -73,6 +75,7 @@ export default {
       steps: '',
       seed: '',
       imageLoadError: false,
+      restoreFaceModalShow: false,
       albumPermissionRequest: false,
       statusPollTimer: null,
     }
@@ -155,6 +158,20 @@ export default {
       uni.previewImage({
         urls: [this.image],
       });
+    },
+    restoreFace() {
+      uni.showLoading({
+        title: '正在提交任务中...',
+        mask: true
+      });
+
+      restoreFace({imageUuid: this.uuid}).then(res => {
+        console.log(res)
+      }).finally(() => {
+        setTimeout(() => {
+          uni.hideLoading()
+        }, 2000)
+      })
     },
     saveImage() {
       uni.getSetting({
