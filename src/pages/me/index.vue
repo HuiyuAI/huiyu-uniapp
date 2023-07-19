@@ -29,6 +29,7 @@
 
 <script>
 import {login} from "@/api/login";
+import {getMyUserInfo} from "@/api/user";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
 
@@ -42,7 +43,6 @@ export default {
         avatar: '/static/images/logout_avatar.jpg',
         point: 0,
       },
-      scrollTop: 0,
       commonColumns: [
         {name: '积分记录', icon: 'icon-ic_batch_default24px', page: '/pages/record/index'},
         {name: '邀请好友', icon: 'icon-appreciate_light'},
@@ -57,26 +57,16 @@ export default {
     }
     this.checkUserInfo()
   },
-  onPullDownRefresh() {
+  onShow() {
     if (!this.isLogin()) {
-      uni.stopPullDownRefresh()
       return
     }
-    this.checkUserInfo()
-    setTimeout(function () {
-      uni.stopPullDownRefresh()
-    }, 1000);
-  },
-  onPageScroll(e) {
-    this.scrollTop = e.scrollTop
+    this.getMyUserInfo()
   },
   methods: {
     isLogin() {
       const userInfo = uni.getStorageSync('userInfo')
-      if (userInfo) {
-        return true
-      }
-      return false
+      return userInfo ? true : false
     },
     checkUserInfo() {
       const userInfo = uni.getStorageSync('userInfo')
@@ -87,6 +77,7 @@ export default {
           userId: 0,
           nickname: '未登录',
           avatar: '/static/images/logout_avatar.jpg',
+          point: 0,
         }
       }
     },
@@ -118,10 +109,6 @@ export default {
 
           // 保存用户信息和token
           login(data).then(res => {
-            const userInfo = (
-                ({userId, openid, nickname, avatar}) => ({userId, openid, nickname, avatar})
-            )(res)
-            uni.setStorageSync('userInfo', userInfo)
             uni.setStorageSync('access_token', res.access_token)
             uni.setStorageSync('refresh_token', res.refresh_token)
             // access_token到期时间
@@ -129,7 +116,7 @@ export default {
             // refresh_token到期时间
             const refreshTokenPayload = parseJwtPayload2Obj(res.refresh_token)
             uni.setStorageSync('refresh_token_expires_at', refreshTokenPayload.exp)
-            this.userInfo = userInfo
+            this.getMyUserInfo()
           })
         },
         fail: () => {
@@ -140,6 +127,12 @@ export default {
         }
       })
     },
+    getMyUserInfo() {
+      getMyUserInfo().then(res => {
+        this.userInfo = res
+        uni.setStorageSync('userInfo', this.userInfo)
+      })
+    }
   }
 }
 </script>

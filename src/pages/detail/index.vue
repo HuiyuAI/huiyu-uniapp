@@ -44,7 +44,7 @@
         </view>
       </view>
       <view class="right">
-        <button>再画一张</button>
+        <button @click="redraw">再画一张</button>
       </view>
     </view>
 
@@ -67,6 +67,7 @@ export default {
       width: 0,
       height: 0,
       prompt: '',
+      negativePrompt: '',
       createTime: '',
       modelName: '',
       quality: '',
@@ -97,6 +98,7 @@ export default {
     content() {
       return [
         {label: '描述词', value: this.prompt},
+        {label: '负向描述词', value: this.negativePrompt},
         {label: '生成时间', value: this.$u.timeFormat(this.createTime, 'yyyy-mm-dd hh:MM')},
         {label: '模型名称', value: this.modelName},
         {label: '图片质量', value: this.quality},
@@ -142,13 +144,14 @@ export default {
       getPicDetail(this.uuid).then(res => {
         this.status = res.status
         this.prompt = res.prompt
+        this.negativePrompt = res.negativePrompt
         this.createTime = res.createTime
         this.modelName = res.modelName
         this.quality = res.quality
         this.ratio = res.ratio
         this.cfg = res.cfg
         this.steps = res.steps
-        this.seed = res.seed
+        this.seed = res.seed || ''
       })
     },
     imgLoadError() {
@@ -157,6 +160,11 @@ export default {
     previewImage() {
       uni.previewImage({
         urls: [this.image],
+      });
+    },
+    redraw() {
+      uni.switchTab({
+        url: `/pages/index/index`
       });
     },
     restoreFace() {

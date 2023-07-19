@@ -54,8 +54,7 @@
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的",
-        "backgroundTextStyle": "light",
-        "enablePullDownRefresh": true
+        "backgroundTextStyle": "light"
       }
     },
     {
