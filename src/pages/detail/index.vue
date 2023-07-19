@@ -48,7 +48,7 @@
       </view>
     </view>
 
-    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对模糊不清的人脸进行智能识别修复，将会生成一张新图，风景类场景请勿使用" show-cancel-button></u-modal>
+    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对模糊的远景人脸进行智能识别修复，将会生成一张新图，风景类场景请勿使用" show-cancel-button></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>

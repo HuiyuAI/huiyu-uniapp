@@ -61,6 +61,8 @@
 
     <u-divider v-if="isLastPage && waterfallFinish" bg-color="transparent" color="#555555" border-color="#555555" half-width="20%" margin-top="20" margin-bottom="20">没有更多了</u-divider>
     <view class="safe-area"></view>
+
+    <u-back-top :scroll-top="scrollTop" top="1000" duration="500" bottom="50" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}"></u-back-top>
   </view>
 </template>
 
@@ -81,6 +83,7 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      scrollTop: 0,
     }
   },
   computed: {
