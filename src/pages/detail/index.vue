@@ -48,7 +48,7 @@
       </view>
     </view>
 
-    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对模糊的远景人脸进行智能识别修复，将会生成一张新图，风景类场景请勿使用" show-cancel-button></u-modal>
+    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对脸部智能重绘修复，适用于远景中的模糊人脸，将会生成一张新图，风景类场景无效请勿使用" show-cancel-button></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>
@@ -91,6 +91,8 @@ export default {
           return '图片正在生成中'
         case 'DISCARD':
           return '图片生成失败<br>积分已返还您的账户'
+        case 'RISKY':
+          return '图片检测违规'
         default:
           return '图片加载失败'
       }
@@ -103,8 +105,8 @@ export default {
         {label: '模型名称', value: this.modelName},
         {label: '图片质量', value: this.quality},
         {label: '图片比例', value: this.ratio},
-        {label: '宽度', value: this.width},
-        {label: '高度', value: this.height},
+        {label: '图片宽度', value: this.width},
+        {label: '图片高度', value: this.height},
         {label: '描述词相关度', value: this.cfg},
         {label: '采样步数', value: this.steps},
         {label: '随机种子', value: this.seed},
@@ -121,10 +123,7 @@ export default {
 
     // 查询图片详情，第一次立即执行
     this.getPicDetail()
-    if (this.status !== 'GENERATING') {
-      // 图片不是生成中状态，不需要轮询
-      return
-    }
+    // 图片生成中状态，需要轮询
     if (this.status === 'GENERATING') {
       // 每2秒查询一次
       this.statusPollTimer = setInterval(() => {

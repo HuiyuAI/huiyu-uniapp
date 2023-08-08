@@ -99,6 +99,8 @@ export default {
             return '图片正在生成中'
           case 'DISCARD':
             return '图片生成失败<br>积分已返还您的账户'
+          case 'RISKY':
+            return '图片检测违规'
           default:
             return '图片加载失败'
         }
