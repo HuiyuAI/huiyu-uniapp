@@ -34,7 +34,7 @@ import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
 
 export default {
-  components: {Card,},
+  components: {Card},
   data() {
     return {
       userInfo: {
@@ -59,6 +59,7 @@ export default {
   },
   onShow() {
     if (!this.isLogin()) {
+      this.initLogoutUserInfo()
       return
     }
     this.getMyUserInfo()
@@ -73,12 +74,15 @@ export default {
       if (userInfo) {
         this.userInfo = userInfo
       } else {
-        this.userInfo = {
-          userId: 0,
-          nickname: '未登录',
-          avatar: '/static/images/logout_avatar.jpg',
-          point: 0,
-        }
+        this.initLogoutUserInfo()
+      }
+    },
+    initLogoutUserInfo() {
+      this.userInfo = {
+        userId: 0,
+        nickname: '未登录',
+        avatar: '/static/images/logout_avatar.jpg',
+        point: 0,
       }
     },
     getUserProfile() {
