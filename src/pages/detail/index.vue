@@ -141,6 +141,7 @@ export default {
   methods: {
     getPicDetail() {
       getPicDetail(this.uuid).then(res => {
+        this.image = res.path
         this.status = res.status
         this.prompt = res.prompt
         this.negativePrompt = res.negativePrompt
