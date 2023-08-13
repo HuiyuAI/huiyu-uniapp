@@ -27,7 +27,10 @@
           <span>每日赠送</span>
           <u-icon name="question-circle" @click="tipsPoint(1)"></u-icon>
         </view>
-        <view class="value">{{ userInfo.dailyPoint }}</view>
+        <view class="value">
+          <view class="t-icon t-icon-jiangbei"></view>
+          <span>{{ userInfo.dailyPoint }}</span>
+        </view>
       </view>
 
       <view class="point">
@@ -35,7 +38,10 @@
           <span>永久积分</span>
           <u-icon name="question-circle" @click="tipsPoint(2)"></u-icon>
         </view>
-        <view class="value">{{ userInfo.point }}</view>
+        <view class="value">
+          <view class="t-icon t-icon-jiangbei"></view>
+          <span>{{ userInfo.point }}</span>
+        </view>
       </view>
     </view>
 
@@ -223,8 +229,19 @@ export default {
     }
 
     .value {
-      font-weight: bold;
-      color: #ff6600;
+      display: flex;
+      align-items: center;
+
+      .t-icon {
+        width: 14px;
+        height: 14px;
+        margin-right: 6rpx;
+      }
+
+      span {
+        font-weight: bold;
+        color: #ff6600;
+      }
     }
   }
 }
