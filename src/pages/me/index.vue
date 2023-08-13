@@ -49,6 +49,27 @@
       <Card :columns="commonColumns"/>
     </view>
 
+    <view class="daily-task-title">
+      每日任务
+    </view>
+
+    <view class="task-wrapper">
+      <view class="task-content">
+        <view class="task-content__item" v-for="(item,index) in dailyTaskList" :key="index">
+          <view :class="['task-content__item-left', item.desc ? '' : 'no-desc']">
+            <view>{{ item.title }}</view>
+            <view class="desc">{{ item.desc }}</view>
+          </view>
+          <view class="task-content__item-point">
+            <view class="t-icon t-icon-jiangbei"></view>
+            <span>{{ `+${item.point}` }}</span>
+          </view>
+          <view class="task-content__item-right finished" v-if="item.status">{{ item.action }}</view>
+          <view class="task-content__item-right unfinished" v-else @click="toTab(item)">{{ item.action }}</view>
+        </view>
+      </view>
+    </view>
+
     <u-top-tips ref="uTips"></u-top-tips>
     <u-toast ref="uToast"/>
     <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
@@ -78,6 +99,12 @@ export default {
         {name: '邀请好友', icon: 'icon-appreciate_light'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
+      ],
+      dailyTaskList: [
+        {title: '每日登录', desc: '进度0/3', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
+        {title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
+        {title: '分享作品', desc: '进度0/3', point: '30', status: false, action: '去分享', page: '/pages/pic/index'},
+        {title: '完成创作', desc: '进度0/5', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
@@ -178,6 +205,13 @@ export default {
       }
       this.tipsPointModelShow = true
     },
+    toTab(item) {
+      if (item.page) {
+        uni.switchTab({
+          url: item.page
+        })
+      }
+    },
   }
 }
 </script>
@@ -190,7 +224,7 @@ export default {
 .user-box {
   display: flex;
   flex-direction: column;
-  padding: 0 20rpx 0 20rpx;
+  margin: 0 20rpx;
 
   .user-nickname {
     font-size: 32rpx;
@@ -233,8 +267,8 @@ export default {
       align-items: center;
 
       .t-icon {
-        width: 14px;
-        height: 14px;
+        width: 28rpx;
+        height: 28rpx;
         margin-right: 6rpx;
       }
 
@@ -248,5 +282,90 @@ export default {
 
 .grid-box {
   margin-top: 20rpx;
+}
+
+.daily-task-title {
+  margin: 40rpx 20rpx 0 30rpx;
+  font-size: 32rpx;
+}
+
+.task {
+  &-wrapper {
+    margin: 20rpx 20rpx 0;
+  }
+
+  &-content {
+    padding: 0 20rpx;
+    border-radius: 10rpx;
+    background: #1a1a1a;
+
+    &.empty {
+      min-height: 180rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20rpx 0;
+      border-bottom: 1rpx solid #aaa;
+      font-size: 28rpx;
+      min-height: 126rpx;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &-left {
+        margin-left: 20rpx;
+        font-size: 28rpx;
+
+        .desc {
+          padding-top: 16rpx;
+          font-size: 24rpx;
+          color: #888;
+        }
+
+        &.no-desc {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      &-point {
+        display: flex;
+        align-items: center;
+        margin-left: 20rpx;
+        margin-right: auto;
+        font-size: 24rpx;
+
+        .t-icon {
+          width: 28rpx;
+          height: 28rpx;
+          margin-right: 4rpx;
+        }
+      }
+
+      &-right {
+        margin-right: 20rpx;
+        font-size: 24rpx;
+        padding: 10rpx 20rpx;
+        border: 1rpx solid $huiyu-color-main;
+        border-radius: 10rpx;
+
+        &.finished {
+          color: $huiyu-color-main;
+        }
+
+        &.unfinished {
+          color: black;
+          background: $huiyu-color-button;
+        }
+      }
+    }
+  }
 }
 </style>

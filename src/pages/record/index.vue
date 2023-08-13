@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 import {pagePointRecord} from "@/api/user";
 import {getPointOperationSourceEnum} from "@/api/enum";
 
@@ -123,7 +122,7 @@ export default {
       }
 
       &-date {
-        padding-top: 8px;
+        padding-top: 16rpx;
         font-size: 24rpx;
       }
     }
