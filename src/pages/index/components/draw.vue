@@ -8,7 +8,7 @@
           <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="maxInput"
+          <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="maxInput" auto-height
                     placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
         </view>
         <view class="text-num-box">
@@ -87,7 +87,7 @@
             <view class="title-desc">(负向描述词)</view>
           </view>
           <view class="text-area">
-            <textarea v-model="formData.negativePrompt" :show-confirm-bar="false" :maxlength="maxInput"
+            <textarea v-model="formData.negativePrompt" :show-confirm-bar="false" :maxlength="maxInput" auto-height
                       placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
           </view>
           <view class="text-num-box">
@@ -331,7 +331,7 @@ export default {
   .text-area {
     textarea {
       width: 100%;
-      height: 120px;
+      min-height: 120px;
       font-size: 14px;
       line-height: 1.5;
     }
