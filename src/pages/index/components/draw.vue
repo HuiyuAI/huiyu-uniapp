@@ -9,7 +9,7 @@
         </view>
         <view class="text-area">
           <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="maxInput" auto-height
-                    placeholder="输入你想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
+                    placeholder="输入你想要的内容，短语单词为佳，支持中英文。请勿输入萝莉、性感、血腥等内容，检测违规后将不返还积分哦。"></textarea>
         </view>
         <view class="text-num-box">
           <view>{{ promptNum }}/{{ maxInput }}</view>

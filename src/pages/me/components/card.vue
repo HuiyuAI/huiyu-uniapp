@@ -46,6 +46,11 @@ export default {
       flex-direction: column;
       align-items: center;
       font-size: 24rpx;
+      margin-bottom: 20px;
+
+      &:nth-last-child(-n+4) {
+        margin-bottom: 0;
+      }
 
       .iconfont {
         margin-bottom: 8rpx;

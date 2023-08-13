@@ -12,10 +12,10 @@
           <view class="user-id u-tips-color">ID: {{ userInfo.userId }}</view>
         </view>
 
-        <view class="u-p-10">
+        <view class="u-m-r-10">
           <u-icon name="setting" color="#969799" size="28"></u-icon>
         </view>
-        <view class="u-p-10">
+        <view>
           <u-icon name="arrow-right" color="#969799" size="28"></u-icon>
         </view>
       </view>
@@ -23,12 +23,18 @@
 
     <view class="point-box">
       <view class="daily-point">
-        <view class="title">每日积分</view>
+        <view class="title">
+          <span>每日赠送</span>
+          <u-icon name="question-circle" @click="tipsPoint(1)"></u-icon>
+        </view>
         <view class="value">{{ userInfo.dailyPoint }}</view>
       </view>
 
       <view class="point">
-        <view class="title">永久积分</view>
+        <view class="title">
+          <span>永久积分</span>
+          <u-icon name="question-circle" @click="tipsPoint(2)"></u-icon>
+        </view>
         <view class="value">{{ userInfo.point }}</view>
       </view>
     </view>
@@ -39,6 +45,7 @@
 
     <u-top-tips ref="uTips"></u-top-tips>
     <u-toast ref="uToast"/>
+    <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
   </view>
 </template>
 
@@ -56,6 +63,7 @@ export default {
         userId: 0,
         nickname: '未登录',
         avatar: '/static/images/logout_avatar.jpg',
+        dailyPoint: 0,
         point: 0,
       },
       commonColumns: [
@@ -63,7 +71,9 @@ export default {
         {name: '邀请好友', icon: 'icon-appreciate_light'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
-      ]
+      ],
+      tipsPointModelShow: false,
+      tipsPointModelContent: '',
     }
   },
   onLoad() {
@@ -97,6 +107,7 @@ export default {
         userId: 0,
         nickname: '未登录',
         avatar: '/static/images/logout_avatar.jpg',
+        dailyPoint: 0,
         point: 0,
       }
     },
@@ -151,7 +162,15 @@ export default {
         this.userInfo = res
         uni.setStorageSync('userInfo', this.userInfo)
       })
-    }
+    },
+    tipsPoint(index) {
+      if (index === 1) {
+        this.tipsPointModelContent = '每日赠送：每天0点自动补充至100，当天24点过期'
+      } else if (index === 2) {
+        this.tipsPointModelContent = '永久积分：无过期时间，永久可用'
+      }
+      this.tipsPointModelShow = true
+    },
   }
 }
 </script>
@@ -196,6 +215,10 @@ export default {
     .title {
       font-size: 28rpx;
       margin-bottom: 10rpx;
+
+      span {
+        margin-right: 6rpx;
+      }
     }
 
     .value {
