@@ -54,6 +54,7 @@ import {login} from "@/api/login";
 import {getMyUserInfo} from "@/api/user";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
+import {dailyPointGive} from "@/config";
 
 export default {
   components: {Card},
@@ -165,7 +166,7 @@ export default {
     },
     tipsPoint(index) {
       if (index === 1) {
-        this.tipsPointModelContent = '每日赠送：每天0点自动补充至100，当天24点过期'
+        this.tipsPointModelContent = `每日赠送：每天0点自动补充至${dailyPointGive}，当天24点过期`
       } else if (index === 2) {
         this.tipsPointModelContent = '永久积分：无过期时间，永久可用'
       }

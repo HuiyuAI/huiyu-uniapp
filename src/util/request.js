@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {BASE_SERVER_URL} from "@/config";
+import {baseServerUrl} from "@/config";
 import {refreshToken} from "@/api/login";
 import {isRefreshTokenExpires, isTimeToRefreshToken, parseJwtPayload2Obj} from "@/util/jwtUtils";
 
@@ -57,7 +57,7 @@ function logout() {
 }
 
 const request = axios.create({
-  baseURL: BASE_SERVER_URL,
+  baseURL: baseServerUrl,
   timeout: 5000
 })
 
