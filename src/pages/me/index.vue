@@ -11,11 +11,26 @@
           </view>
           <view class="user-id u-tips-color">ID: {{ userInfo.userId }}</view>
         </view>
+
+        <view class="u-p-10">
+          <u-icon name="setting" color="#969799" size="28"></u-icon>
+        </view>
+        <view class="u-p-10">
+          <u-icon name="arrow-right" color="#969799" size="28"></u-icon>
+        </view>
       </view>
     </view>
 
-    <view class="point">
-      积分：{{ userInfo.point }}
+    <view class="point-box">
+      <view class="daily-point">
+        <view class="title">每日积分</view>
+        <view class="value">{{ userInfo.dailyPoint }}</view>
+      </view>
+
+      <view class="point">
+        <view class="title">永久积分</view>
+        <view class="value">{{ userInfo.point }}</view>
+      </view>
     </view>
 
     <view class="grid-box">
@@ -160,8 +175,34 @@ export default {
   }
 }
 
-.point {
+.point-box {
   margin: 20rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .daily-point, .point {
+    width: calc(50% - 10rpx);
+    background-color: #1a1a1a;
+    padding: 20rpx;
+    border-radius: 10rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .title {
+      font-size: 28rpx;
+      margin-bottom: 10rpx;
+    }
+
+    .value {
+      font-weight: bold;
+      color: #ff6600;
+    }
+  }
 }
 
 .grid-box {
