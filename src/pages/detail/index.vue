@@ -16,7 +16,7 @@
     </view>
 
     <view class="content">
-      <view class="item" v-for="(item,index) in content" :key="index">
+      <view class="item" v-for="(item,index) in content" :key="index" v-if="item.value">
         <span class="label">{{ item.label }}：</span>
         <span class="value">{{ item.value }}</span>
       </view>
