@@ -125,17 +125,18 @@ export default {
             uni.stopPullDownRefresh()
           }, 500);
         }
-        res.records.forEach(item => {
-          const img = {
+
+        const processedList = res.records.map(item => {
+          return {
             id: item.uuid,
             image: item.path,
             status: item.status,
             originWidth: item.width,
             originHeight: item.height,
           }
-          this.$nextTick(() => {
-            this.list.push(img)
-          })
+        })
+        this.$nextTick(() => {
+          this.list = this.list.concat(processedList)
         })
       })
     },
