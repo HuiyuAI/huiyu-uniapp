@@ -103,7 +103,7 @@ export default {
       dailyTaskList: [
         {title: '每日登录', desc: '进度(0/1)', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
         {title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
-        {title: '分享作品', desc: '进度(0/3)', point: '30', status: false, action: '去分享', page: '/pages/pic/index'},
+        {title: '投稿作品', desc: '进度(0/3)', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
         {title: '完成创作', desc: '进度(0/5)', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
       ],
       tipsPointModelShow: false,

@@ -35,12 +35,16 @@
           <view class="u-line-1">修脸</view>
         </view>
         <view class="item">
+          <text class="iconfont icon-k-line"></text>
+          <view class="u-line-1">超分</view>
+        </view>
+        <view class="item">
           <text class="iconfont icon-meihua"></text>
           <view class="u-line-1">精绘</view>
         </view>
         <view class="item">
-          <text class="iconfont icon-fenxiang"></text>
-          <view class="u-line-1">分享</view>
+          <text class="iconfont icon-fabu1"></text>
+          <view class="u-line-1">投稿</view>
         </view>
       </view>
       <view class="right">
@@ -317,7 +321,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin: 0 34rpx;
+      margin: 0 24rpx;
 
       &:first-child {
         margin-left: 0rpx;
