@@ -4,19 +4,25 @@
     <view class="action-box">
       <view class="left">作品数量: {{ totalCount }} / 1000</view>
       <view class="right">
-        <view class="item" @click="batchAction">
-          <text class="iconfont icon-ic_batch_default24px"></text>
-          批量
+        <view class="item" @click="clickBatchAction">
+          <view v-if="!showBatchSelect">
+            <text class="iconfont icon-ic_batch_default24px"></text>
+            {{ batchActionText }}
+          </view>
+          <view v-else class="batch-cancel">取消</view>
         </view>
       </view>
     </view>
 
-    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish">
+    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish" @remove="remove">
       <!-- 第一列数据 -->
       <template v-slot:list1>
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
+            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
             <view @click="toDetailPage(item)">
+              <view :class="item.checked ? 'image-checked': ''"></view>
               <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
               <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
@@ -31,7 +37,10 @@
       <template v-slot:list2>
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
+            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
             <view @click="toDetailPage(item)">
+              <view :class="item.checked ? 'image-checked': ''"></view>
               <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
               <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
@@ -46,7 +55,10 @@
       <template v-slot:list3>
         <view>
           <view v-for="(item, index) in list3" :key="item.id" class="img-box">
+            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
             <view @click="toDetailPage(item)">
+              <view :class="item.checked ? 'image-checked': ''"></view>
               <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
               <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                 <view class="img-status-text">
@@ -84,6 +96,8 @@ export default {
       list2: [],
       list3: [],
       scrollTop: 0,
+      batchActionText: '批量',
+      showBatchSelect: false
     }
   },
   computed: {
@@ -161,6 +175,8 @@ export default {
             status: item.status,
             originWidth: item.width,
             originHeight: item.height,
+            is4k: item.is4k,
+            checked: false,
           }
         })
         this.$nextTick(() => {
@@ -171,7 +187,33 @@ export default {
     imgLoadError(item) {
       item.status = 'ERROR'
     },
-    batchAction() {
+    clickBatchAction() {
+      if (this.showBatchSelect) {
+        this.showBatchSelect = false
+        this.batchActionText = '批量'
+        // 重置选中状态
+        this.list1.forEach(item => {
+          item.checked = false
+        })
+        this.list2.forEach(item => {
+          item.checked = false
+        })
+        this.list3.forEach(item => {
+          item.checked = false
+        })
+      } else {
+        this.showBatchSelect = true
+        this.batchActionText = '取消'
+      }
+    },
+    clickCheckBox(item) {
+      item.checked = !item.checked
+      console.log(item.id)
+    },
+    batchRemove() {
+      this.$refs.waterfall.remove(item.id)
+    },
+    remove() {
 
     },
     toDetailPage(item) {
@@ -194,6 +236,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin: 20rpx 10rpx 20rpx;
+  height: 40rpx;
 
   .left {
     font-size: 24rpx;
@@ -212,12 +255,47 @@ export default {
         font-size: 32rpx;
         margin-right: 4rpx;
       }
+
+      .batch-cancel {
+        font-size: 24rpx;
+        padding: 4rpx 20rpx;
+        border: 1rpx solid;
+        border-radius: 10rpx;
+      }
     }
   }
 }
 
 .img-box {
   margin-bottom: 12rpx;
+  position: relative;
+
+  .check-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 12rpx;
+    z-index: 1;
+    font-size: 50rpx;
+  }
+
+  .quality-4k {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 12rpx;
+    z-index: 1;
+  }
+
+  .image-checked {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+  }
 
   .img-status-box {
     position: relative;
