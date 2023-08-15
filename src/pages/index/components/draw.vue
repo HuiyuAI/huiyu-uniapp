@@ -127,6 +127,7 @@
 
 <script>
 import {getModelList, txt2img} from "@/api/sd";
+import {sizeList, countList, qualityList} from "@/config";
 
 export default {
   name: 'Draw',
@@ -151,24 +152,9 @@ export default {
       maxInput: 500,
       enableAdvanced: false,
       seed: null,
-      sizeList: [
-        {ratio: '9:16', width: 30, height: 52, val: 1, desc: '手机壁纸', selected: true},
-        {ratio: '16:9', width: 52, height: 30, val: 2, desc: '电脑壁纸', selected: false},
-        {ratio: '2:3', width: 30, height: 44, val: 3, desc: '社交媒体', selected: false},
-        {ratio: '3:2', width: 44, height: 30, val: 4, desc: '文章配图', selected: false},
-        {ratio: '1:1', width: 40, height: 40, val: 5, desc: '头像', selected: false},
-      ],
-      countList: [
-        {val: 1, selected: true},
-        {val: 2, selected: false},
-        {val: 3, selected: false},
-        {val: 4, selected: false},
-      ],
-      qualityList: [
-        {title: '高清', val: 1, selected: true},
-        {title: '超清', val: 2, selected: false},
-        {title: '超高清4K', val: 3, selected: false},
-      ],
+      sizeList,
+      countList,
+      qualityList,
     }
   },
   watch: {
@@ -557,43 +543,6 @@ export default {
   .right {
     display: flex;
     margin-right: 10rpx;
-  }
-}
-
-.result-box {
-  margin-top: 30rpx;
-
-  .result-content {
-    display: flex;
-    flex-wrap: wrap;
-
-    .res-img-box {
-      width: calc(50% - 12rpx);
-      height: 300rpx;
-      margin: 20rpx 20rpx 0 0;
-
-      &:nth-child(2n) {
-        margin-right: 0;
-      }
-
-      background-color: rgba(150, 150, 150, 0.8);
-      border-radius: 10rpx;
-      position: relative;
-
-      .download {
-        position: absolute;
-        right: 0rpx;
-        bottom: 0;
-        padding: 50rpx 18rpx 20rpx 40rpx;
-
-        // background-color: #fff000;
-        text {
-          background-color: rgba(0, 0, 0, 0.6);
-          padding: 13rpx;
-          border-radius: 200rpx;
-        }
-      }
-    }
   }
 }
 
