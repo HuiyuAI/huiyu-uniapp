@@ -45,7 +45,7 @@
           <view class="ratio-list" v-for="(item,index) in sizeList" :key="index">
             <view class="ratio-item" :class="item.selected?'ratio-sel':''" @click="sizeChange(item)">
               <view class="item-shape-box">
-                <view class="item-shape" :style="'width:'+item.width+'px;height:'+item.height+'px;'"></view>
+                <view class="item-shape" :style="'width:'+item.width+'rpx;height:'+item.height+'rpx;'"></view>
               </view>
               <view class="item-txt">{{ item.ratio }}</view>
             </view>
@@ -152,11 +152,11 @@ export default {
       enableAdvanced: false,
       seed: null,
       sizeList: [
-        {ratio: '9:16', width: 15, height: 26, val: 1, desc: '手机壁纸', selected: true},
-        {ratio: '16:9', width: 26, height: 15, val: 2, desc: '电脑壁纸', selected: false},
-        {ratio: '2:3', width: 15, height: 22, val: 3, desc: '社交媒体', selected: false},
-        {ratio: '3:2', width: 22, height: 15, val: 4, desc: '文章配图', selected: false},
-        {ratio: '1:1', width: 20, height: 20, val: 5, desc: '头像', selected: false},
+        {ratio: '9:16', width: 30, height: 52, val: 1, desc: '手机壁纸', selected: true},
+        {ratio: '16:9', width: 52, height: 30, val: 2, desc: '电脑壁纸', selected: false},
+        {ratio: '2:3', width: 30, height: 44, val: 3, desc: '社交媒体', selected: false},
+        {ratio: '3:2', width: 44, height: 30, val: 4, desc: '文章配图', selected: false},
+        {ratio: '1:1', width: 40, height: 40, val: 5, desc: '头像', selected: false},
       ],
       countList: [
         {val: 1, selected: true},
@@ -315,7 +315,7 @@ export default {
   .section {
     display: flex;
     align-items: baseline;
-    font-size: 15px;
+    font-size: 30rpx;
     color: $huiyu-color-main;
 
     .title {
@@ -324,15 +324,15 @@ export default {
     }
 
     .title-desc {
-      font-size: 10px;
+      font-size: 20rpx;
     }
   }
 
   .text-area {
     textarea {
       width: 100%;
-      min-height: 120px;
-      font-size: 14px;
+      min-height: 240rpx;
+      font-size: 28rpx;
       line-height: 1.5;
     }
   }
@@ -351,7 +351,7 @@ export default {
   .recommended-word {
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 24rpx;
     border: 1rpx solid $huiyu-color-main;
     padding: 6rpx 4rpx 6rpx 12rpx;
     border-radius: 10rpx;
@@ -363,7 +363,7 @@ export default {
   padding: 30rpx 0 10rpx;
 
   .item-section-subs {
-    font-size: 13px;
+    font-size: 26rpx;
     margin-left: 10rpx;
   }
 }
@@ -384,13 +384,13 @@ export default {
       }
 
       .model-item {
-        font-size: 14px;
+        font-size: 28rpx;
         border-radius: 10rpx;
         background-color: #323232;
         box-sizing: border-box;
         width: 100%;
         height: 140rpx;
-        border: 2px solid transparent;
+        border: 4rpx solid transparent;
         overflow: hidden;
 
         .model-normal {
@@ -417,7 +417,7 @@ export default {
       }
 
       .model-sel {
-        border: 2px solid $huiyu-color-main;
+        border: 4rpx solid $huiyu-color-main;
         color: $huiyu-color-main;
         box-sizing: border-box;
       }
@@ -427,11 +427,11 @@ export default {
 
 .seed-box {
   .seed-input {
-    height: 35px;
-    font-size: 14px;
+    height: 70rpx;
+    font-size: 28rpx;
     padding: 0 20rpx;
-    border: 1px solid #fff;
-    border-radius: 4px;
+    border: 2rpx solid #fff;
+    border-radius: 8rpx;
   }
 }
 
@@ -455,7 +455,7 @@ export default {
         flex-direction: column;
         align-items: center;
         border-radius: 10rpx;
-        border: 2px solid $huiyu-color-normal;
+        border: 4rpx solid $huiyu-color-normal;
 
         .item-shape-box {
           width: 60rpx;
@@ -471,12 +471,12 @@ export default {
         }
 
         .item-txt {
-          font-size: 13px;
+          font-size: 26rpx;
         }
       }
 
       .ratio-sel {
-        border: 2px solid $huiyu-color-main;
+        border: 4rpx solid $huiyu-color-main;
       }
     }
   }
@@ -501,7 +501,7 @@ export default {
         padding: 10rpx 0;
         background-color: $huiyu-color-normal;
         border-radius: 10rpx;
-        font-size: 14px;
+        font-size: 28rpx;
       }
 
       .generate-sel {
@@ -532,7 +532,7 @@ export default {
         padding: 10rpx 0;
         background-color: $huiyu-color-normal;
         border-radius: 10rpx;
-        font-size: 14px;
+        font-size: 28rpx;
       }
 
       .quality-sel {
@@ -551,7 +551,7 @@ export default {
   padding: 40rpx 0 10rpx;
 
   .left {
-    font-size: 20px;
+    font-size: 40rpx;
   }
 
   .right {
@@ -569,7 +569,7 @@ export default {
 
     .res-img-box {
       width: calc(50% - 12rpx);
-      height: 150px;
+      height: 300rpx;
       margin: 20rpx 20rpx 0 0;
 
       &:nth-child(2n) {
@@ -590,7 +590,7 @@ export default {
         text {
           background-color: rgba(0, 0, 0, 0.6);
           padding: 13rpx;
-          border-radius: 100px;
+          border-radius: 200rpx;
         }
       }
     }
@@ -605,7 +605,7 @@ export default {
   left: 15%;
   text-align: center;
   border-radius: 100rpx;
-  box-shadow: 0 0 3px 3px rgba(72, 219, 251, 0.3), 0 0 5px 5px rgba(72, 219, 251, 0.3);
+  box-shadow: 0 0 6rpx 6rpx rgba(72, 219, 251, 0.3), 0 0 10rpx 10rpx rgba(72, 219, 251, 0.3);
 
   button {
     background: $huiyu-color-button;

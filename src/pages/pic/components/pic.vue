@@ -195,12 +195,12 @@ export default {
   margin: 20rpx 10rpx 20rpx;
 
   .left {
-    font-size: 12px;
+    font-size: 24rpx;
   }
 
   .right {
     display: flex;
-    font-size: 14px;
+    font-size: 28rpx;
 
     .item {
       display: flex;
@@ -208,7 +208,7 @@ export default {
       align-items: center;
 
       .iconfont {
-        font-size: 16px;
+        font-size: 32rpx;
         margin-right: 4rpx;
       }
     }
@@ -222,7 +222,7 @@ export default {
     position: relative;
     background-color: #1a1a1a;
     width: 100%;
-    border-radius: 6px;
+    border-radius: 12rpx;
 
     .img-status-text {
       position: absolute;
@@ -239,6 +239,6 @@ export default {
 }
 
 .safe-area {
-  padding-bottom: 1px;
+  padding-bottom: 2rpx;
 }
 </style>

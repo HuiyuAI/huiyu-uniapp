@@ -101,10 +101,10 @@ export default {
         {name: '邀请好友', icon: 'icon-fenxiang'},
       ],
       dailyTaskList: [
-        {title: '每日登录', desc: '进度0/3', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
+        {title: '每日登录', desc: '进度(0/1)', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
         {title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
-        {title: '分享作品', desc: '进度0/3', point: '30', status: false, action: '去分享', page: '/pages/pic/index'},
-        {title: '完成创作', desc: '进度0/5', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
+        {title: '分享作品', desc: '进度(0/3)', point: '30', status: false, action: '去分享', page: '/pages/pic/index'},
+        {title: '完成创作', desc: '进度(0/5)', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
@@ -310,10 +310,9 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20rpx 0;
       border-bottom: 1rpx solid #aaa;
       font-size: 28rpx;
-      min-height: 126rpx;
+      height: 110rpx;
 
       &:last-child {
         border-bottom: none;
@@ -324,8 +323,8 @@ export default {
         font-size: 28rpx;
 
         .desc {
-          padding-top: 16rpx;
-          font-size: 24rpx;
+          padding-top: 4rpx;
+          font-size: 20rpx;
           color: #888;
         }
 
