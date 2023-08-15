@@ -276,11 +276,24 @@ export default {
       });
 
       txt2img(this.formData).then(res => {
-        console.log(res)
+        this.toDetailPage(res)
       }).finally(() => {
-        setTimeout(() => {
-          uni.hideLoading()
-        }, 2000)
+        uni.hideLoading()
+      })
+    },
+    toDetailPage(res) {
+      const item = {
+        id: res.uuid,
+        image: res.path,
+        status: res.status,
+        originWidth: res.width,
+        originHeight: res.height,
+      }
+
+      const query = this.$u.queryParams(item)
+      console.log(query)
+      uni.navigateTo({
+        url: `/pages/detail/index${query}`,
       })
     },
   }
