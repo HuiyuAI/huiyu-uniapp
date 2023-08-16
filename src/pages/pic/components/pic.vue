@@ -311,11 +311,17 @@ export default {
 }
 
 .action-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 20rpx 10rpx 20rpx;
-  height: 40rpx;
+  padding: 20rpx 24rpx 20rpx;
+  height: 80rpx;
 
   .left {
     font-size: 24rpx;
