@@ -1,6 +1,5 @@
 <template>
   <view class="container">
-    <!-- 高级设置 -->
     <view class="action-box">
       <view class="left">作品数量: {{ totalCount }} / 1000</view>
       <view class="right">
@@ -13,6 +12,9 @@
         </view>
       </view>
     </view>
+
+    <!-- 高度占位 -->
+    <view class="block"></view>
 
     <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish" @remove="remove">
       <!-- 第一列数据 -->
@@ -320,7 +322,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20rpx 24rpx 20rpx;
+  padding: 0 24rpx 6rpx;
   height: 80rpx;
 
   .left {
@@ -349,6 +351,10 @@ export default {
       }
     }
   }
+}
+
+.block {
+  height: 80rpx;
 }
 
 .img-box {
