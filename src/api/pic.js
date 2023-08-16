@@ -21,3 +21,11 @@ export function getPicDetail(uuid) {
     }
   })
 }
+
+export function deleteByUuidList(uuidList) {
+  return axios({
+    url: '/service/pic/deleteByUuidList',
+    method: 'POST',
+    data: uuidList
+  })
+}

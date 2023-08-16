@@ -74,12 +74,26 @@
     <u-divider v-if="isLastPage && waterfallFinish" bg-color="transparent" color="#555555" border-color="#555555" half-width="20%" margin-top="20" margin-bottom="20">没有更多了</u-divider>
     <view class="safe-area"></view>
 
-    <u-back-top :scroll-top="scrollTop" top="1000" duration="500" bottom="50" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}"></u-back-top>
+    <view class="footer" v-if="showBatchSelect">
+      <view class="left">
+        <view>已选中 {{ selectedArr.length }} 张</view>
+      </view>
+      <view class="right">
+        <view class="item delete" @click="batchDelete">
+          <text class="iconfont icon-delete"></text>
+          <view class="u-line-1">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <u-back-top :scroll-top="scrollTop" top="1000" duration="500" bottom="140" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}"></u-back-top>
+
+    <u-modal v-model="deleteConfirmModalShow" @confirm="confirmDelete" title="删除" confirm-text="确定" :content="deleteConfirmModalContent" show-cancel-button></u-modal>
   </view>
 </template>
 
 <script>
-import {getPicPage} from "@/api/pic";
+import {getPicPage, deleteByUuidList} from "@/api/pic";
 
 export default {
   name: "pic",
@@ -97,7 +111,9 @@ export default {
       list3: [],
       scrollTop: 0,
       batchActionText: '批量',
-      showBatchSelect: false
+      showBatchSelect: false,
+      selectedArr: [],
+      deleteConfirmModalShow: false,
     }
   },
   computed: {
@@ -120,6 +136,9 @@ export default {
         }
       }
     },
+    deleteConfirmModalContent() {
+      return `确定要删除这${this.selectedArr.length}张图片吗？`
+    }
   },
   mounted() {
     this.getPicPage(true)
@@ -132,9 +151,17 @@ export default {
       this.waterfallFinish = true
     },
     pullDownRefresh() {
+      if (this.deleteConfirmModalShow) {
+        uni.stopPullDownRefresh()
+        return
+      }
+      this.refreshData()
+    },
+    refreshData() {
       this.pageNum = 1
       this.isLastPage = false
       this.getPicPage(true, true)
+      this.selectedArr = []
     },
     reachBottom() {
       this.getPicPage()
@@ -201,20 +228,72 @@ export default {
         this.list3.forEach(item => {
           item.checked = false
         })
+        this.selectedArr = []
       } else {
         this.showBatchSelect = true
         this.batchActionText = '取消'
       }
     },
     clickCheckBox(item) {
+      if (item.checked) {
+        // 从选中数组中删除
+        const index = this.selectedArr.findIndex(id => id === item.id)
+        index !== -1 && this.selectedArr.splice(index, 1)
+      } else {
+        // 添加到选中数组中
+        this.selectedArr.push(item.id)
+      }
       item.checked = !item.checked
-      console.log(item.id)
     },
-    batchRemove() {
-      this.$refs.waterfall.remove(item.id)
+    batchDelete() {
+      if (this.selectedArr.length === 0) {
+        uni.showToast({
+          title: '请选择要删除的图片',
+          icon: 'none',
+        })
+        return
+      }
+      this.deleteConfirmModalShow = true
     },
-    remove() {
+    confirmDelete() {
+      uni.showLoading({
+        title: '正在删除中...',
+        mask: true
+      });
 
+      deleteByUuidList(this.selectedArr).then(res => {
+        uni.showToast({
+          title: '删除成功',
+          icon: 'none',
+        })
+        this.selectedArr.forEach(id => {
+          this.$refs.waterfall.remove(id)
+        })
+        this.totalCount -= this.selectedArr.length
+        this.selectedArr = []
+      }).finally(() => {
+        uni.hideLoading()
+      })
+    },
+    // 删除某项后返回对应id，根据id标识在列数据中手动删除该项数据
+    remove(id) {
+      const index1 = this.list1.findIndex(item => item.id === id)
+      if (index1 !== -1) {
+        this.list1.splice(index1, 1)
+        return
+      }
+
+      const index2 = this.list2.findIndex(item => item.id === id)
+      if (index2 !== -1) {
+        this.list2.splice(index2, 1)
+        return
+      }
+
+      const index3 = this.list3.findIndex(item => item.id === id)
+      if (index3 !== -1) {
+        this.list3.splice(index3, 1)
+        return
+      }
     },
     toDetailPage(item) {
       const query = this.$u.queryParams(item)
@@ -317,7 +396,55 @@ export default {
   }
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding-top: 14rpx;
+  padding-bottom: 14rpx;
+  display: flex;
+  background-color: #1a1a1a;
+
+  .left {
+    display: flex;
+    align-items: center;
+    font-size: 24rpx;
+    margin-left: 20rpx;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    font-size: 24rpx;
+    margin-left: auto;
+    margin-right: 20rpx;
+
+    .item {
+      display: flex;
+      align-items: center;
+      margin: 0 12rpx;
+      padding: 12rpx 14rpx;
+      border: 1rpx solid;
+      border-radius: 10rpx;
+
+      .iconfont {
+        margin-right: 4rpx;
+      }
+
+      &:last-child {
+        margin-right: 0rpx;
+      }
+
+      &.delete {
+        color: #F56C6C;
+      }
+    }
+  }
+}
+
 .safe-area {
-  padding-bottom: 2rpx;
+  padding-bottom: 80rpx;
 }
 </style>
