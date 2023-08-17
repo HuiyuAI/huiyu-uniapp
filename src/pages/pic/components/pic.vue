@@ -327,6 +327,34 @@ export default {
       const query = this.$u.queryParams(item)
       uni.navigateTo({
         url: `/pages/detail/index${query}`,
+        events: {
+          // 监听图片在子页面中生成完毕的事件
+          onImageGenerated: (data) => {
+            const {uuid, image} = data
+            console.log('onImageGenerated', data)
+            const index1 = this.list1.findIndex(item => item.id === uuid)
+            if (index1 !== -1) {
+              this.list1[index1].image = image
+              this.list1[index1].status = 'GENERATED'
+              console.log(this.list1[index1])
+              return
+            }
+
+            const index2 = this.list2.findIndex(item => item.id === uuid)
+            if (index2 !== -1) {
+              this.list2[index2].image = image
+              this.list2[index2].status = 'GENERATED'
+              return
+            }
+
+            const index3 = this.list3.findIndex(item => item.id === uuid)
+            if (index3 !== -1) {
+              this.list3[index3].image = image
+              this.list3[index3].status = 'GENERATED'
+              return
+            }
+          },
+        }
       })
     },
   }

@@ -125,6 +125,10 @@ export default {
     this.width = option.originWidth
     this.height = option.originHeight
 
+    // #ifndef APP-NVUE
+    this.eventChannel = this.getOpenerEventChannel()
+    // #endif
+
     // 查询图片详情，第一次立即执行
     this.getPicDetail()
     // 图片生成中状态，需要轮询
@@ -134,6 +138,12 @@ export default {
         this.getPicDetail()
         if (this.status !== 'GENERATING') {
           clearInterval(this.statusPollTimer)
+          // 通知画夹页图片生成完毕
+          console.log(this.eventChannel)
+          this.eventChannel.emit('onImageGenerated', {
+            uuid: this.uuid,
+            image: this.image,
+          })
         }
       }, 2000)
     }
