@@ -79,6 +79,7 @@ export default {
       cfg: '',
       steps: '',
       seed: '',
+      modelId: 0,
       imageLoadError: false,
       restoreFaceModalShow: false,
       albumPermissionRequest: false,
@@ -166,6 +167,7 @@ export default {
         this.cfg = res.cfg
         this.steps = res.steps
         this.seed = res.seed || ''
+        this.modelId = res.modelId
       })
     },
     imgLoadError() {
@@ -177,6 +179,18 @@ export default {
       });
     },
     redraw() {
+      const data = {
+        prompt: this.prompt,
+        modelId: this.modelId,
+        ratio: this.ratio,
+        quality: this.quality,
+        negativePrompt: this.negativePrompt,
+        cfg: this.cfg,
+        steps: this.steps,
+      }
+
+      uni.$emit('redraw', data)
+
       uni.switchTab({
         url: `/pages/index/index`
       });

@@ -145,7 +145,6 @@ export default {
         seed: null,
       },
       point: 2,
-      isBusying: false,
       modelList: [],
       promptNum: 0,
       negativePromptNum: 0,
@@ -167,6 +166,13 @@ export default {
   },
   created() {
     this.getModelList()
+
+    // 开启再画一张事件监听
+    uni.$on('redraw', (data) => {
+      console.log('redraw' + data)
+      console.log(data.modelId)
+      this.redraw(data)
+    })
   },
   methods: {
     /**
@@ -187,6 +193,44 @@ export default {
           }
         })
       })
+    },
+    /**
+     * 再画一张自动填充参数
+     */
+    redraw(data) {
+      // prompt
+      this.formData.prompt = data.prompt
+
+      // model
+      const modelItem = this.modelList.find((item) => item.id === data.modelId)
+      this.clickModel(modelItem)
+
+      // ratio
+      const sizeItem = this.sizeList.find((item) => item.ratio === data.ratio)
+      this.sizeChange(sizeItem)
+
+      // num
+      this.countItem = this.countList.find((item) => item.val === 1)
+      this.countChange(this.countItem)
+
+      // quality
+      const qualityItem = this.qualityList.find((item) => item.title === data.quality)
+      this.qualityChange(qualityItem)
+
+
+      // enableAdvanced
+      if (data.negativePrompt || data.cfg !== 9 || data.steps !== 20) {
+        this.enableAdvanced = true
+      }
+
+      // negativePrompt
+      this.formData.negativePrompt = data.negativePrompt
+
+      // cfg
+      this.formData.cfg = data.cfg
+
+      // steps
+      this.formData.steps = data.steps
     },
     /**
      * 切换模型
@@ -291,7 +335,6 @@ export default {
       }
 
       const query = this.$u.queryParams(item)
-      console.log(query)
       uni.navigateTo({
         url: `/pages/detail/index${query}`,
       })
