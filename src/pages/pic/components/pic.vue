@@ -1,80 +1,87 @@
 <template>
   <view class="container">
-    <view class="action-box">
-      <view class="left">作品数量: {{ totalCount }} / 1000</view>
-      <view class="right">
-        <view class="item" @click="clickBatchAction">
-          <view v-if="!showBatchSelect">
-            <text class="iconfont icon-ic_batch_default24px"></text>
-            {{ batchActionText }}
+    <view class="header">
+      <view class="action-box">
+        <view class="left">作品数量: {{ totalCount }} / 1000</view>
+        <view class="right">
+          <view class="item" @click="clickBatchAction">
+            <view v-if="!showBatchSelect">
+              <text class="iconfont icon-ic_batch_default24px"></text>
+              {{ batchActionText }}
+            </view>
+            <view v-else class="batch-cancel">取消</view>
           </view>
-          <view v-else class="batch-cancel">取消</view>
         </view>
       </view>
     </view>
 
-    <!-- 高度占位 -->
-    <view class="block"></view>
+    <view class="main">
+      <scroll-view class="scroll" scroll-y enable-back-to-top show-scrollbar refresher-default-style="white"
+                   :scroll-top="scrollTop" @scroll="onScroll" scroll-with-animation
+                   refresher-enabled :refresher-triggered="refreshTriggered" @refresherrefresh="onRefresh"
+                   lower-threshold="50" @scrolltolower="reachBottom">
+        <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish" @remove="remove">
+          <!-- 第一列数据 -->
+          <template v-slot:list1>
+            <view>
+              <view v-for="(item, index) in list1" :key="item.id" class="img-box">
+                <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+                <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
+                <view @click="toDetailPage(item)">
+                  <view :class="item.checked ? 'image-checked': ''"></view>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
+                    <view class="img-status-text">
+                      <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </template>
+          <!-- 第二列数据 -->
+          <template v-slot:list2>
+            <view>
+              <view v-for="(item, index) in list2" :key="item.id" class="img-box">
+                <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+                <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
+                <view @click="toDetailPage(item)">
+                  <view :class="item.checked ? 'image-checked': ''"></view>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
+                    <view class="img-status-text">
+                      <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </template>
+          <!-- 第三列数据 -->
+          <template v-slot:list3>
+            <view>
+              <view v-for="(item, index) in list3" :key="item.id" class="img-box">
+                <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
+                <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
+                <view @click="toDetailPage(item)">
+                  <view :class="item.checked ? 'image-checked': ''"></view>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
+                    <view class="img-status-text">
+                      <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </template>
+        </uv-waterfall>
 
-    <uv-waterfall ref="waterfall" v-model="list" addTime="0" columnCount="3" column-gap="6" @changeList="changeList" @finish="finish" @remove="remove">
-      <!-- 第一列数据 -->
-      <template v-slot:list1>
-        <view>
-          <view v-for="(item, index) in list1" :key="item.id" class="img-box">
-            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
-            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
-            <view @click="toDetailPage(item)">
-              <view :class="item.checked ? 'image-checked': ''"></view>
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
-                <view class="img-status-text">
-                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </template>
-      <!-- 第二列数据 -->
-      <template v-slot:list2>
-        <view>
-          <view v-for="(item, index) in list2" :key="item.id" class="img-box">
-            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
-            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
-            <view @click="toDetailPage(item)">
-              <view :class="item.checked ? 'image-checked': ''"></view>
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
-                <view class="img-status-text">
-                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </template>
-      <!-- 第三列数据 -->
-      <template v-slot:list3>
-        <view>
-          <view v-for="(item, index) in list3" :key="item.id" class="img-box">
-            <text :class="['check-box', 'iconfont', item.checked ? 'icon-squarecheck' : 'icon-square']" v-show="showBatchSelect" @click="clickCheckBox(item)"></text>
-            <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
-            <view @click="toDetailPage(item)">
-              <view :class="item.checked ? 'image-checked': ''"></view>
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
-                <view class="img-status-text">
-                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </template>
-    </uv-waterfall>
+        <u-divider v-if="isLastPage && waterfallFinish" bg-color="transparent" color="#555555" border-color="#555555" half-width="20%" margin-top="20">没有更多了</u-divider>
 
-    <u-divider v-if="isLastPage && waterfallFinish" bg-color="transparent" color="#555555" border-color="#555555" half-width="20%" margin-top="20" margin-bottom="20">没有更多了</u-divider>
-    <view class="safe-area"></view>
+        <view class="safe-area" v-if="!showBatchSelect"></view>
+      </scroll-view>
+    </view>
 
     <view class="footer" v-if="showBatchSelect">
       <view class="left">
@@ -88,7 +95,7 @@
       </view>
     </view>
 
-    <u-back-top :scroll-top="scrollTop" top="1000" duration="500" bottom="140" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}"></u-back-top>
+    <u-back-top :scroll-top="oldScrollTop" top="2000" duration="500" bottom="140" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}" @click.native.prevent="goTop"></u-back-top>
 
     <u-modal v-model="deleteConfirmModalShow" @confirm="confirmDelete" title="删除" confirm-text="确定" :content="deleteConfirmModalContent" show-cancel-button></u-modal>
   </view>
@@ -112,10 +119,13 @@ export default {
       list2: [],
       list3: [],
       scrollTop: 0,
+      oldScrollTop: 0,
       batchActionText: '批量',
       showBatchSelect: false,
       selectedArr: [],
       deleteConfirmModalShow: false,
+      refreshTriggered: false,
+      refreshing: false,
     }
   },
   computed: {
@@ -152,12 +162,30 @@ export default {
     finish() {
       this.waterfallFinish = true
     },
-    pullDownRefresh() {
-      if (this.deleteConfirmModalShow) {
-        uni.stopPullDownRefresh()
-        return
+    onScroll(e) {
+      this.oldScrollTop = e.detail.scrollTop
+    },
+    goTop() {
+      this.scrollTop = this.oldScrollTop
+      this.$nextTick(() => {
+        this.scrollTop = 0
+      })
+    },
+    onRefresh() {
+      if (this.refreshing) return
+      this.refreshing = true
+
+      if (!this.refreshTriggered) {
+        this.refreshTriggered = true
       }
+
       this.refreshData()
+    },
+    restoreRefresh() {
+      setTimeout(() => {
+        this.refreshTriggered = false
+        this.refreshing = false
+      }, 500)
     },
     refreshData() {
       this.pageNum = 1
@@ -192,9 +220,7 @@ export default {
           }
         }
         if (isRefresh) {
-          setTimeout(() => {
-            uni.stopPullDownRefresh()
-          }, 500);
+          this.restoreRefresh()
         }
 
         const processedList = res.records.map(item => {
@@ -310,19 +336,16 @@ export default {
 <style scoped lang="scss">
 .container {
   padding: 0rpx 12rpx;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .action-box {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24rpx 6rpx;
+  padding: 0 12rpx 6rpx;
   height: 80rpx;
 
   .left {
@@ -353,8 +376,13 @@ export default {
   }
 }
 
-.block {
-  height: 80rpx;
+.main {
+  flex: 1;
+  overflow-y: auto;
+
+  .scroll {
+    height: 100%;
+  }
 }
 
 .img-box {
@@ -409,15 +437,10 @@ export default {
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
+  height: 90rpx;
   padding-top: 14rpx;
   padding-bottom: 14rpx;
   display: flex;
-  background-color: #1a1a1a;
 
   .left {
     display: flex;
@@ -457,6 +480,6 @@ export default {
 }
 
 .safe-area {
-  padding-bottom: 80rpx;
+  padding-bottom: 90rpx;
 }
 </style>

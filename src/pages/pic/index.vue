@@ -14,15 +14,6 @@ export default {
   },
   onLoad() {
   },
-  onPageScroll(e) {
-    this.$refs.pic.scrollTop = e.scrollTop
-  },
-  onPullDownRefresh() {
-    this.$refs.pic.pullDownRefresh()
-  },
-  onReachBottom() {
-    this.$refs.pic.reachBottom()
-  },
   methods: {}
 }
 </script>
