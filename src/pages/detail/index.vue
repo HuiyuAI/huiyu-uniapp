@@ -25,9 +25,9 @@
         </view>
 
         <view class="right">
-          <view class="item share" @click="$u.throttle(sharePicPopupShow=true, 1000)">
+          <view class="item share" @click="$u.throttle(clickShareButton, 1000)">
             <text class="icon iconfont icon-fabu1"></text>
-            <view class="u-line-1">投稿</view>
+            <view class="u-line-1">{{ shareButtonText }}</view>
           </view>
           <view class="item like" @click="likePic">
             <u-icon class="icon" :name="isLike ? 'heart-fill' : 'heart'" :style="{color: isLike ? '#F56C6C' : ''}"></u-icon>
@@ -80,7 +80,7 @@
         </view>
 
         <view class="share-form__footer">
-          <button class="confirm-share" @click="sharePic">确认投稿</button>
+          <u-button throttle-time="0" size="medium" type="primary" :plain="false" :loading="sharePicLoading" @click="sharePic">确认投稿</u-button>
         </view>
       </view>
     </u-popup>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import {getPicDetail} from "@/api/pic";
+import {getPicDetail, share} from "@/api/pic";
 import {restoreFace} from "@/api/sd";
 import {restoreFacePoint} from "@/config"
 
@@ -120,7 +120,9 @@ export default {
       restoreFaceModalShow: false,
       albumPermissionRequest: false,
       statusPollTimer: null,
+      shareStatus: 'NONE',
       shareTitle: '',
+      sharePicLoading: false,
       restoreFacePoint,
     }
   },
@@ -138,6 +140,20 @@ export default {
           return '图片检测违规'
         default:
           return '图片加载失败'
+      }
+    },
+    shareButtonText() {
+      switch (this.shareStatus) {
+        case 'NONE':
+          return '投稿'
+        case 'AUDITING':
+          return '审核中'
+        case 'PUBLIC':
+          return '已公开'
+        case 'NO_PASS':
+          return '未通过'
+        default:
+          return '投稿中'
       }
     },
     content() {
@@ -239,8 +255,19 @@ export default {
         this.restoreFaceModalShow = false
       })
     },
+    clickShareButton() {
+      if (this.shareStatus === 'NONE') {
+        this.sharePicPopupShow = true
+      }
+    },
     sharePic() {
-      console.log(this.shareTitle)
+      this.sharePicLoading = true
+      share(this.uuid, this.shareTitle).then(res => {
+        this.shareStatus = 'AUDITING'
+      }).finally(() => {
+        this.sharePicLoading = false
+        this.sharePicPopupShow = false
+      })
     },
     likePic() {
       this.isLike = !this.isLike
@@ -492,15 +519,6 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 100rpx 0 40rpx;
-
-    .confirm-share {
-      color: black;
-      background: $huiyu-color-button;
-      padding: 0 60rpx;
-      border-radius: 80rpx;
-      font-size: 28rpx;
-      font-weight: bold;
-    }
   }
 }
 </style>

@@ -29,3 +29,14 @@ export function deleteByUuidList(uuidList) {
     data: uuidList
   })
 }
+
+export function share(uuid, title) {
+  return axios({
+    url: '/service/pic/share',
+    method: 'POST',
+    data: {
+      uuid,
+      title
+    }
+  })
+}
