@@ -71,7 +71,6 @@
     </view>
 
     <u-top-tips ref="uTips"></u-top-tips>
-    <u-toast ref="uToast"/>
     <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
   </view>
 </template>

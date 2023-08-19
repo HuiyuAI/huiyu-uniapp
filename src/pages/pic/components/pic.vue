@@ -275,6 +275,7 @@ export default {
         uni.showToast({
           title: '请选择要删除的图片',
           icon: 'none',
+          duration: 2000,
         })
         return
       }
@@ -290,6 +291,7 @@ export default {
         uni.showToast({
           title: '删除成功',
           icon: 'none',
+          duration: 2000,
         })
         this.selectedArr.forEach(id => {
           this.$refs.waterfall.remove(id)

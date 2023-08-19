@@ -264,6 +264,10 @@ export default {
       this.sharePicLoading = true
       share(this.uuid, this.shareTitle).then(res => {
         this.shareStatus = 'AUDITING'
+        this.$refs.uToast.show({
+          title: '提交审核成功！',
+          type: 'success',
+        })
       }).finally(() => {
         this.sharePicLoading = false
         this.sharePicPopupShow = false
