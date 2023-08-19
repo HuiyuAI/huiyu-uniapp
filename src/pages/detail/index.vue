@@ -16,9 +16,30 @@
     </view>
 
     <view class="content">
-      <view class="item" v-for="(item,index) in content" :key="index" v-if="item.value">
-        <span class="label">{{ item.label }}：</span>
-        <span class="value">{{ item.value }}</span>
+      <view class="action">
+        <view class="left">
+          <view class="date">
+            <span class="label">生成时间：</span>
+            <span class="value">{{ createTime | timeFormat('yyyy-mm-dd hh:MM') }}</span>
+          </view>
+        </view>
+
+        <view class="right">
+          <view class="item share" @click="$u.throttle(sharePicPopupShow=true, 1000)">
+            <text class="icon iconfont icon-fabu1"></text>
+            <view class="u-line-1">投稿</view>
+          </view>
+          <view class="item like" @click="likePic">
+            <u-icon class="icon" :name="isLike ? 'heart-fill' : 'heart'" :style="{color: isLike ? '#F56C6C' : ''}"></u-icon>
+          </view>
+        </view>
+      </view>
+
+      <view class="pic-detail">
+        <view class="item" v-for="(item,index) in content" :key="index" v-if="item.value">
+          <span class="label">{{ item.label }}：</span>
+          <span class="value">{{ item.value }}</span>
+        </view>
       </view>
     </view>
 
@@ -42,17 +63,29 @@
           <text class="iconfont icon-meihua"></text>
           <view class="u-line-1">精绘</view>
         </view>
-        <view class="item">
-          <text class="iconfont icon-fabu1"></text>
-          <view class="u-line-1">投稿</view>
-        </view>
       </view>
       <view class="right">
         <button @click="redraw">再画一张</button>
       </view>
     </view>
 
-    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" title="修脸" content="针对脸部智能重绘修复，适用于远景中的模糊人脸，将会生成一张新图，风景类场景无效请勿使用" show-cancel-button></u-modal>
+    <u-popup v-model="sharePicPopupShow" mode="top">
+      <!-- 作品标题 -->
+      <view class="share-form">
+        <view class="share-form__item">
+          <view class="item-title">作品标题（选填）</view>
+          <view class="item-input">
+            <input v-model="shareTitle" type="text" maxlength="20" @input="" placeholder="请输入作品标题"/>
+          </view>
+        </view>
+
+        <view class="share-form__footer">
+          <button class="confirm-share" @click="sharePic">确认投稿</button>
+        </view>
+      </view>
+    </u-popup>
+
+    <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" async-close title="修脸" :confirm-text="`确定(消耗${restoreFacePoint}积分)`" content="针对脸部智能重绘修复，适用于远景中的模糊人脸，将会生成一张新图，风景类场景无效请勿使用" show-cancel-button></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>
@@ -61,6 +94,7 @@
 <script>
 import {getPicDetail} from "@/api/pic";
 import {restoreFace} from "@/api/sd";
+import {restoreFacePoint} from "@/config"
 
 export default {
   data() {
@@ -80,10 +114,14 @@ export default {
       steps: '',
       seed: '',
       modelId: 0,
+      isLike: true,
       imageLoadError: false,
+      sharePicPopupShow: false,
       restoreFaceModalShow: false,
       albumPermissionRequest: false,
       statusPollTimer: null,
+      shareTitle: '',
+      restoreFacePoint,
     }
   },
   computed: {
@@ -106,7 +144,6 @@ export default {
       return [
         {label: '描述词', value: this.prompt},
         {label: '负向描述词', value: this.negativePrompt},
-        {label: '生成时间', value: this.$u.timeFormat(this.createTime, 'yyyy-mm-dd hh:MM')},
         {label: '模型名称', value: this.modelName},
         {label: '图片质量', value: this.quality},
         {label: '图片比例', value: this.ratio},
@@ -196,16 +233,22 @@ export default {
       });
     },
     restoreFace() {
-      uni.showLoading({
-        title: '正在提交任务中...',
-        mask: true
-      });
-
       restoreFace({imageUuid: this.uuid}).then(res => {
         this.toDetailPage(res)
       }).finally(() => {
-        uni.hideLoading()
+        this.restoreFaceModalShow = false
       })
+    },
+    sharePic() {
+      console.log(this.shareTitle)
+    },
+    likePic() {
+      this.isLike = !this.isLike
+
+      // 防抖
+      this.$u.debounce(() => {
+        // 请求
+      }, 500)
     },
     toDetailPage(res) {
       const item = {
@@ -217,7 +260,6 @@ export default {
       }
 
       const query = this.$u.queryParams(item)
-      console.log(query)
       uni.navigateTo({
         url: `/pages/detail/index${query}`,
       })
@@ -313,19 +355,68 @@ export default {
 .content {
   padding: 20rpx 30rpx;
 
-  .item {
-    font-size: 28rpx;
-    line-height: 40rpx;
-    margin-bottom: 20rpx;
+  .action {
+    display: flex;
+    padding: 20rpx 0;
+    border-bottom: 1rpx solid #555555;
 
-    .label {
+    .left {
+      display: flex;
+      align-items: center;
+      font-size: 24rpx;
       color: #969696;
     }
 
-    .value {
-      overflow-wrap: break-word;
-      word-break: break-all;
-      color: #e0e0e0;
+    .right {
+      display: flex;
+      font-size: 34rpx;
+      margin-left: auto;
+
+      .item {
+        display: flex;
+        align-items: center;
+        margin: 0 12rpx;
+
+        .icon {
+          margin-right: 8rpx;
+        }
+
+        &.share {
+          .icon {
+            font-size: 36rpx;
+          }
+        }
+
+        &.like {
+          .icon {
+            font-size: 38rpx;
+          }
+        }
+
+        &:last-child {
+          margin-right: 0rpx;
+        }
+      }
+    }
+  }
+
+  .pic-detail {
+    margin-top: 20rpx;
+
+    .item {
+      font-size: 28rpx;
+      line-height: 40rpx;
+      margin-bottom: 20rpx;
+
+      .label {
+        color: #969696;
+      }
+
+      .value {
+        overflow-wrap: break-word;
+        word-break: break-all;
+        color: #e0e0e0;
+      }
     }
   }
 }
@@ -373,6 +464,39 @@ export default {
     button {
       background: $huiyu-color-button;
       color: black;
+      border-radius: 80rpx;
+      font-size: 28rpx;
+      font-weight: bold;
+    }
+  }
+}
+
+.share-form {
+  &__item {
+    color: #000000;
+
+    .item-title {
+      margin: 20rpx 20rpx 0;
+      font-size: 30rpx;
+      font-weight: bold;
+    }
+
+    .item-input {
+      margin: 10rpx 20rpx;
+      border-bottom: 1px solid;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 100rpx 0 40rpx;
+
+    .confirm-share {
+      color: black;
+      background: $huiyu-color-button;
+      padding: 0 60rpx;
       border-radius: 80rpx;
       font-size: 28rpx;
       font-weight: bold;

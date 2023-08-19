@@ -97,7 +97,7 @@
 
     <u-back-top :scroll-top="oldScrollTop" top="2000" duration="500" bottom="140" right="30" :icon-style="{fontSize: '40rpx',color:'#759ef0'}" @click.native.prevent="goTop"></u-back-top>
 
-    <u-modal v-model="deleteConfirmModalShow" @confirm="confirmDelete" title="删除" confirm-text="确定" :content="deleteConfirmModalContent" show-cancel-button></u-modal>
+    <u-modal v-model="deleteConfirmModalShow" @confirm="confirmDelete" title="删除" confirm-text="确定" :content="`确定要删除这${this.selectedArr.length}张图片吗？`" show-cancel-button></u-modal>
   </view>
 </template>
 
@@ -148,9 +148,6 @@ export default {
         }
       }
     },
-    deleteConfirmModalContent() {
-      return `确定要删除这${this.selectedArr.length}张图片吗？`
-    }
   },
   mounted() {
     this.getPicPage(true)

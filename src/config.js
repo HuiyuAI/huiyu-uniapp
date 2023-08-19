@@ -12,6 +12,12 @@ module.exports = {
   dailyPointGive: 100,
 
   /**
+   * @type {number}
+   * @description 修脸消耗点数
+   */
+  restoreFacePoint: 2,
+
+  /**
    * @type {Array}
    * @description 尺寸比例
    */
