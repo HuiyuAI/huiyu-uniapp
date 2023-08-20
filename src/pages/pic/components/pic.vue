@@ -29,7 +29,7 @@
                 <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
                 <view @click="toDetailPage(item)">
                   <view :class="item.checked ? 'image-checked': ''"></view>
-                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12rpx"></zero-lazy-load>
                   <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                     <view class="img-status-text">
                       <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
@@ -47,7 +47,7 @@
                 <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
                 <view @click="toDetailPage(item)">
                   <view :class="item.checked ? 'image-checked': ''"></view>
-                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12rpx"></zero-lazy-load>
                   <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                     <view class="img-status-text">
                       <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
@@ -65,7 +65,7 @@
                 <text class="quality-4k iconfont icon-k-line" v-show="item.is4k"></text>
                 <view @click="toDetailPage(item)">
                   <view :class="item.checked ? 'image-checked': ''"></view>
-                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
+                  <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12rpx"></zero-lazy-load>
                   <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
                     <view class="img-status-text">
                       <view class="u-text-center" v-html="imgStatusText(item.status)"></view>

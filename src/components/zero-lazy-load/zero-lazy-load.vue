@@ -1,15 +1,15 @@
 <template>
   <view class="zero-content" :style="{
 		opacity: Number(opacity),
-		borderRadius: borderRadius + 'rpx',
+		borderRadius: borderRadius,
 		// 因为time值需要改变,所以不直接用duration值(不能改变父组件prop传过来的值)
 		transition: `opacity ${time / 1000}s ease-in-out`
 	}" :class="'zero-lazy-item-' + elIndex">
     <view :class="'zero-lazy-item-' + elIndex">
-      <image :style="{ borderRadius: borderRadius + 'rpx', height: imgHeight }" v-if="!isError" class="zero-lazy-item"
+      <image :style="{ borderRadius: borderRadius, height: imgHeight }" v-if="!isError" class="zero-lazy-item"
              :src="isShow ? image : loadingImg" :mode="imgMode" @load="imgLoaded" @error="loadError" @tap="clickImg">
       </image>
-      <image :style="{ borderRadius: borderRadius + 'rpx', height: imgHeight }" class="zero-lazy-item error" v-else
+      <image :style="{ borderRadius: borderRadius, height: imgHeight }" class="zero-lazy-item error" v-else
              :src="errorImg" :mode="imgMode" @load="errorImgLoaded" @tap="clickImg"></image>
     </view>
   </view>
@@ -122,7 +122,7 @@ export default {
     },
     // 圆角值
     borderRadius: {
-      type: [Number, String],
+      type: [String],
       default: 0
     },
     // 图片高度，单位rpx

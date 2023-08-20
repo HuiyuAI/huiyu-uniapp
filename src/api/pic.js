@@ -40,3 +40,15 @@ export function share(uuid, title) {
     }
   })
 }
+
+export function getPicSharePage(pageNum, pageSize, queryDeadline) {
+  return axios({
+    url: '/service/pic/picSharePage',
+    method: 'GET',
+    params: {
+      pageNum,
+      pageSize,
+      queryDeadline,
+    }
+  })
+}

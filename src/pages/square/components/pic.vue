@@ -6,10 +6,18 @@
         <view>
           <view v-for="(item, index) in list1" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
-                <view class="img-status-text">
-                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12rpx 12rpx 0 0"></zero-lazy-load>
+              <view class="img-box__footer">
+                <view class="title" v-if="item.title">{{ item.title }}</view>
+                <view class="info">
+                  <view class="left">
+                    <image :src="item.userAvatar" class="avatar" mode="aspectFill"></image>
+                    <view class="nickname">{{ item.userNickname }}</view>
+                  </view>
+                  <view class="right">
+                    <u-icon class="icon" :name="false ? 'heart-fill' : 'heart'" :style="{color: false ? '#F56C6C' : ''}"></u-icon>
+                    <view class="u-line-1">{{ item.likeCount }}</view>
+                  </view>
                 </view>
               </view>
             </view>
@@ -21,10 +29,18 @@
         <view>
           <view v-for="(item, index) in list2" :key="item.id" class="img-box">
             <view @click="toDetailPage(item)">
-              <zero-lazy-load v-if="item.status === 'GENERATED'" :image="item.image" @error="imgLoadError(item)" threshold="500" duration="500" borderRadius="12"></zero-lazy-load>
-              <view v-else class="img-status-box" :style="{paddingBottom: aspectRatio(item) + '%'}">
-                <view class="img-status-text">
-                  <view class="u-text-center" v-html="imgStatusText(item.status)"></view>
+              <zero-lazy-load :image="item.image" threshold="500" duration="500" borderRadius="12rpx 12rpx 0 0"></zero-lazy-load>
+              <view class="img-box__footer">
+                <view class="title" v-if="item.title">{{ item.title }}</view>
+                <view class="info">
+                  <view class="left">
+                    <image :src="item.userAvatar" class="avatar" mode="aspectFill"></image>
+                    <view class="nickname">{{ item.userNickname }}</view>
+                  </view>
+                  <view class="right">
+                    <u-icon class="icon" :name="false ? 'heart-fill' : 'heart'" :style="{color: false ? '#F56C6C' : ''}"></u-icon>
+                    <view class="u-line-1">{{ item.likeCount }}</view>
+                  </view>
                 </view>
               </view>
             </view>
@@ -41,7 +57,7 @@
 </template>
 
 <script>
-import {getPicPage} from "@/api/pic";
+import {getPicSharePage} from "@/api/pic";
 
 export default {
   name: "pic",
@@ -58,27 +74,6 @@ export default {
       list2: [],
       scrollTop: 0,
     }
-  },
-  computed: {
-    aspectRatio() {
-      return function (item) {
-        return (item.originHeight / item.originWidth) * 100
-      }
-    },
-    imgStatusText() {
-      return function (status) {
-        switch (status) {
-          case 'GENERATING':
-            return '图片正在生成中'
-          case 'DISCARD':
-            return '图片生成失败<br>积分已返还您的账户'
-          case 'RISKY':
-            return '图片检测违规'
-          default:
-            return '图片加载失败'
-        }
-      }
-    },
   },
   mounted() {
     this.getPicPage(true)
@@ -104,7 +99,7 @@ export default {
       if (isFirst) {
         this.queryDeadline = Date.now()
       }
-      getPicPage(this.pageNum++, this.pageSize, this.queryDeadline).then(res => {
+      getPicSharePage(this.pageNum++, this.pageSize, this.queryDeadline).then(res => {
         if (isFirst) {
           this.totalCount = res.total
           this.list = []
@@ -130,21 +125,18 @@ export default {
           return {
             id: item.uuid,
             image: item.path,
-            status: item.status,
             originWidth: item.width,
             originHeight: item.height,
+            title: item.title,
+            userAvatar: item.userAvatar,
+            userNickname: item.userNickname,
+            likeCount: item.likeCount,
           }
         })
         this.$nextTick(() => {
           this.list = this.list.concat(processedList)
         })
       })
-    },
-    imgLoadError(item) {
-      item.status = 'ERROR'
-    },
-    batchAction() {
-
     },
     toDetailPage(item) {
       const query = this.$u.queryParams(item)
@@ -190,23 +182,51 @@ export default {
 
 .img-box {
   margin-bottom: 12rpx;
+  background-color: #1a1a1a;
+  border-radius: 12rpx;
 
-  .img-status-box {
-    position: relative;
-    background-color: #1a1a1a;
-    width: 100%;
-    border-radius: 12rpx;
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    padding: 20rpx 16rpx;
 
-    .img-status-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-size: 22rpx;
-      color: #969696;
+    .title {
+      font-size: 28rpx;
+      margin-bottom: 20rpx;
+    }
+
+    .info {
+      display: flex;
+
+      .left {
+        display: flex;
+        align-items: center;
+
+        .avatar {
+          width: 40rpx;
+          height: 40rpx;
+          border-radius: 50%;
+        }
+
+        .nickname {
+          margin-left: 8rpx;
+          font-size: 24rpx;
+          color: #969696;
+        }
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        font-size: 24rpx;
+        color: #969696;
+
+        .icon {
+          font-size: 34rpx;
+          margin-right: 8rpx;
+        }
+      }
     }
   }
 }
