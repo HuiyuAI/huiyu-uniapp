@@ -78,6 +78,12 @@
       }
     },
     {
+      "path": "pages/share/index",
+      "style": {
+        "navigationBarTitleText": "作品详情"
+      }
+    },
+    {
       "path": "pages/record/index",
       "style": {
         "navigationBarTitleText": "积分记录"

@@ -141,7 +141,7 @@ export default {
     toDetailPage(item) {
       const query = this.$u.queryParams(item)
       uni.navigateTo({
-        url: `/pages/detail/index${query}`,
+        url: `/pages/share/index${query}`,
       })
     },
   }
