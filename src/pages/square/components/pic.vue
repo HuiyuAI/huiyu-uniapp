@@ -15,7 +15,7 @@
                     <view class="nickname">{{ item.userNickname }}</view>
                   </view>
                   <view class="right">
-                    <u-icon class="icon" :name="false ? 'heart-fill' : 'heart'" :style="{color: false ? '#F56C6C' : ''}"></u-icon>
+                    <u-icon class="icon" name="heart-fill" style="color: #F56C6C"></u-icon>
                     <view class="u-line-1">{{ item.likeCount }}</view>
                   </view>
                 </view>
@@ -38,7 +38,7 @@
                     <view class="nickname">{{ item.userNickname }}</view>
                   </view>
                   <view class="right">
-                    <u-icon class="icon" :name="false ? 'heart-fill' : 'heart'" :style="{color: false ? '#F56C6C' : ''}"></u-icon>
+                    <u-icon class="icon" name="heart-fill" style="color: #F56C6C"></u-icon>
                     <view class="u-line-1">{{ item.likeCount }}</view>
                   </view>
                 </view>

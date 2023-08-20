@@ -330,12 +330,10 @@ export default {
           // 监听图片在子页面中生成完毕的事件
           onImageGenerated: (data) => {
             const {uuid, image} = data
-            console.log('onImageGenerated', data)
             const index1 = this.list1.findIndex(item => item.id === uuid)
             if (index1 !== -1) {
               this.list1[index1].image = image
               this.list1[index1].status = 'GENERATED'
-              console.log(this.list1[index1])
               return
             }
 

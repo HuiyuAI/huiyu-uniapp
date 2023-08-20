@@ -169,8 +169,6 @@ export default {
 
     // 开启再画一张事件监听
     uni.$on('redraw', (data) => {
-      console.log('redraw' + data)
-      console.log(data.modelId)
       this.redraw(data)
     })
   },

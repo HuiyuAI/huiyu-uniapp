@@ -3,7 +3,7 @@
     <view class="user-box" @click="$u.throttle(getUserProfile, 1000)">
       <view class="u-flex">
         <view class="u-m-r-20">
-          <u-avatar :src="userInfo.avatar" size="100"></u-avatar>
+          <image :src="userInfo.avatar" class="user-avatar" mode="aspectFill"></image>
         </view>
         <view class="u-flex-1">
           <view class="user-nickname u-p-b-10">
@@ -224,6 +224,12 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 0 20rpx;
+
+  .user-avatar {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 50%;
+  }
 
   .user-nickname {
     font-size: 32rpx;

@@ -193,7 +193,6 @@ export default {
         if (this.status !== 'GENERATING') {
           clearInterval(this.statusPollTimer)
           // 通知画夹页图片生成完毕
-          console.log(this.eventChannel)
           this.eventChannel.emit('onImageGenerated', {
             uuid: this.uuid,
             image: this.image,
