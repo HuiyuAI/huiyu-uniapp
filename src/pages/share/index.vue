@@ -73,7 +73,6 @@ export default {
       quality: '',
       ratio: '',
       cfg: '',
-      steps: '',
       seed: '',
       modelId: 0,
       isLike: true,
@@ -94,8 +93,6 @@ export default {
         {label: '图片宽度', value: this.width},
         {label: '图片高度', value: this.height},
         {label: '描述词相关度', value: this.cfg},
-        {label: '采样步数', value: this.steps},
-        {label: '随机种子', value: this.seed},
         {label: '图片ID', value: this.uuid},
       ]
     }
@@ -129,7 +126,6 @@ export default {
         this.quality = res.quality
         this.ratio = res.ratio
         this.cfg = res.cfg
-        this.steps = res.steps
         this.seed = res.seed || ''
         this.modelId = res.modelId
       })
@@ -142,7 +138,6 @@ export default {
         quality: this.quality,
         negativePrompt: this.negativePrompt,
         cfg: this.cfg,
-        steps: this.steps,
       }
 
       uni.$emit('redraw', data)

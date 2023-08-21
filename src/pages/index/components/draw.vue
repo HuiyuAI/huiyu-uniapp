@@ -100,10 +100,10 @@
           <slider :value="formData.cfg" min="3" max="15" @change="cfgChange" :show-value="true" active-color="#2979ff" block-color="#2979ff" block-size="20"></slider>
         </view>
         <!-- 采样步数 -->
-        <view>
-          <view class="item-section">采样步数</view>
-          <slider :value="formData.steps" min="10" max="30" @change="stepsChange" :show-value="true" active-color="#2979ff" block-color="#2979ff" block-size="20"></slider>
-        </view>
+        <!--<view>-->
+        <!--  <view class="item-section">采样步数</view>-->
+        <!--  <slider :value="formData.steps" min="10" max="30" @change="stepsChange" :show-value="true" active-color="#2979ff" block-color="#2979ff" block-size="20"></slider>-->
+        <!--</view>-->
         <!-- 随机种子 -->
         <view class="seed-box">
           <view class="item-section">随机种子
@@ -217,7 +217,7 @@ export default {
 
 
       // enableAdvanced
-      if (data.negativePrompt || data.cfg !== 9 || data.steps !== 20) {
+      if (data.negativePrompt || data.cfg !== 9) {
         this.enableAdvanced = true
       }
 
@@ -226,9 +226,6 @@ export default {
 
       // cfg
       this.formData.cfg = data.cfg
-
-      // steps
-      this.formData.steps = data.steps
     },
     /**
      * 切换模型
