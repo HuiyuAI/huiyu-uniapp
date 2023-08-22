@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {getPicShare} from "@/api/pic";
+import {getPicShare, redraw} from "@/api/pic";
 
 export default {
   data() {
@@ -139,19 +139,22 @@ export default {
     },
     redraw() {
       const data = {
-        prompt: this.prompt,
         modelId: this.modelId,
         ratio: this.ratio,
         quality: this.quality,
-        negativePrompt: this.negativePrompt,
         cfg: this.cfg,
       }
 
-      uni.$emit('redraw', data)
+      redraw(this.uuid).then(res => {
+        data.prompt = res.prompt
+        data.negativePrompt = res.negativePrompt
 
-      uni.switchTab({
-        url: `/pages/index/index`
-      });
+        uni.$emit('redraw', data)
+
+        uni.switchTab({
+          url: `/pages/index/index`
+        });
+      })
     },
     likePic() {
       this.isLike = !this.isLike

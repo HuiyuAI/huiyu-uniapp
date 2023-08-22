@@ -62,3 +62,13 @@ export function getPicShare(uuid) {
     }
   })
 }
+
+export function redraw(uuid) {
+  return axios({
+    url: '/service/pic/redraw',
+    method: 'GET',
+    params: {
+      uuid
+    }
+  })
+}
