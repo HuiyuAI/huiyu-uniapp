@@ -197,23 +197,23 @@ export default {
      */
     redraw(data) {
       // prompt
-      this.formData.prompt = data.prompt
+      this.formData.prompt = data.prompt || ''
 
       // model
       const modelItem = this.modelList.find((item) => item.id === data.modelId)
-      this.clickModel(modelItem)
+      modelItem && this.clickModel(modelItem)
 
       // ratio
       const sizeItem = this.sizeList.find((item) => item.ratio === data.ratio)
-      this.sizeChange(sizeItem)
+      sizeItem && this.sizeChange(sizeItem)
 
       // num
-      this.countItem = this.countList.find((item) => item.val === 1)
-      this.countChange(this.countItem)
+      const countItem = this.countList.find((item) => item.val === 1)
+      countItem && this.countChange(countItem)
 
       // quality
       const qualityItem = this.qualityList.find((item) => item.title === data.quality)
-      this.qualityChange(qualityItem)
+      qualityItem && this.qualityChange(qualityItem)
 
 
       // enableAdvanced
@@ -222,7 +222,7 @@ export default {
       }
 
       // negativePrompt
-      this.formData.negativePrompt = data.negativePrompt
+      this.formData.negativePrompt = data.negativePrompt || ''
 
       // cfg
       this.formData.cfg = data.cfg

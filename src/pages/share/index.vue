@@ -17,16 +17,21 @@
 
     <view class="content">
       <view class="action">
-        <view class="left">
-          <view class="date">
-            <span class="label">生成时间：</span>
-            <span class="value">{{ createTime | timeFormat('yyyy-mm-dd hh:MM') }}</span>
+        <view class="title" v-if="title">{{ title }}</view>
+        <view class="info">
+          <view class="left">
+            <image :src="userAvatar" class="avatar" mode="aspectFill"></image>
+            <view class="nickname">{{ userNickname }}</view>
           </view>
-        </view>
-
-        <view class="right">
-          <view class="item like" @click="likePic">
-            <u-icon class="icon" :name="isLike ? 'heart-fill' : 'heart'" :style="{color: isLike ? '#F56C6C' : ''}"></u-icon>
+          <view class="right">
+            <view class="item">
+              <u-icon class="icon" name="heart-fill" style="color: #F56C6C"></u-icon>
+              <view class="u-line-1">{{ likeCount }}</view>
+            </view>
+            <view class="item" @click="likePic">
+              <u-icon class="icon" :name="isLike ? 'heart-fill' : 'heart'" :style="{color: isLike ? '#F56C6C' : ''}"></u-icon>
+              <view class="u-line-1">{{ likeCount }}</view>
+            </view>
           </view>
         </view>
       </view>
@@ -49,33 +54,34 @@
         </view>
       </view>
       <view class="right">
-        <button @click="redraw">再画一张</button>
+        <button @click="redraw">画同款</button>
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import {getPicDetail} from "@/api/pic";
+import {getPicShare} from "@/api/pic";
 
 export default {
   data() {
     return {
       uuid: '',
       image: '',
-      status: '',
       width: 0,
       height: 0,
-      prompt: '',
-      negativePrompt: '',
-      createTime: '',
+      modelId: 0,
       modelName: '',
       quality: '',
       ratio: '',
       cfg: '',
-      seed: '',
-      modelId: 0,
+      userNickname: '',
+      userAvatar: '',
+      title: '',
+      likeCount: 0,
+      drawCount: 0,
       isLike: true,
+      auditTime: '',
       imgLoadError: false,
     }
   },
@@ -85,8 +91,9 @@ export default {
     },
     content() {
       return [
-        {label: '描述词', value: this.prompt},
-        {label: '负向描述词', value: this.negativePrompt},
+        {label: '投稿时间', value: this.$u.timeFormat(this.auditTime, 'yyyy-mm-dd hh:MM')},
+        {label: '描述词', value: '画同款可见'},
+        {label: '负向描述词', value: '画同款可见'},
         {label: '模型名称', value: this.modelName},
         {label: '图片质量', value: this.quality},
         {label: '图片比例', value: this.ratio},
@@ -100,7 +107,6 @@ export default {
   onLoad(option) {
     this.uuid = option.id
     this.image = option.image
-    this.status = option.status
     this.width = option.originWidth
     this.height = option.originHeight
 
@@ -116,18 +122,19 @@ export default {
   },
   methods: {
     getPicDetail() {
-      getPicDetail(this.uuid).then(res => {
-        this.image = res.path
-        this.status = res.status
-        this.prompt = res.prompt
-        this.negativePrompt = res.negativePrompt
-        this.createTime = res.createTime
+      getPicShare(this.uuid).then(res => {
+        this.modelId = res.modelId
         this.modelName = res.modelName
         this.quality = res.quality
         this.ratio = res.ratio
         this.cfg = res.cfg
-        this.seed = res.seed || ''
-        this.modelId = res.modelId
+        this.userNickname = res.userNickname
+        this.userAvatar = res.userAvatar
+        this.title = res.title
+        this.likeCount = res.likeCount
+        this.drawCount = res.drawCount
+        this.isLike = res.isLike
+        this.auditTime = res.auditTime
       })
     },
     redraw() {
@@ -198,38 +205,54 @@ export default {
 
   .action {
     display: flex;
-    padding: 20rpx 0;
+    flex-direction: column;
+    padding: 10rpx 0 20rpx;
     border-bottom: 1rpx solid #555555;
 
-    .left {
-      display: flex;
-      align-items: center;
-      font-size: 24rpx;
-      color: #969696;
+    .title {
+      font-size: 32rpx;
+      margin-bottom: 20rpx;
     }
 
-    .right {
+    .info {
       display: flex;
-      font-size: 34rpx;
-      margin-left: auto;
 
-      .item {
+      .left {
         display: flex;
         align-items: center;
-        margin: 0 12rpx;
 
-        .icon {
-          margin-right: 8rpx;
+        .avatar {
+          width: 50rpx;
+          height: 50rpx;
+          border-radius: 50%;
         }
 
-        &.like {
+        .nickname {
+          margin-left: 8rpx;
+          font-size: 28rpx;
+        }
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        font-size: 34rpx;
+        color: #969696;
+
+        .item {
+          display: flex;
+          align-items: center;
+          margin: 0 12rpx;
+
           .icon {
             font-size: 38rpx;
+            margin-right: 8rpx;
           }
-        }
 
-        &:last-child {
-          margin-right: 0rpx;
+          &:last-child {
+            margin-right: 0rpx;
+          }
         }
       }
     }

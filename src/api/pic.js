@@ -52,3 +52,13 @@ export function getPicSharePage(pageNum, pageSize, queryDeadline) {
     }
   })
 }
+
+export function getPicShare(uuid) {
+  return axios({
+    url: '/service/pic/getPicShare',
+    method: 'GET',
+    params: {
+      uuid
+    }
+  })
+}
