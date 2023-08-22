@@ -25,8 +25,8 @@
           </view>
           <view class="right">
             <view class="item">
-              <u-icon class="icon" name="heart-fill" style="color: #F56C6C"></u-icon>
-              <view class="u-line-1">{{ likeCount }}</view>
+              <view class="t-icon t-icon-palette"></view>
+              <view class="u-line-1">{{ drawCount }}</view>
             </view>
             <view class="item" @click="likePic">
               <u-icon class="icon" :name="isLike ? 'heart-fill' : 'heart'" :style="{color: isLike ? '#F56C6C' : ''}"></u-icon>
@@ -47,12 +47,6 @@
     <view class="safe-area"></view>
 
     <view class="footer">
-      <view class="left">
-        <view class="item">
-          <text class="iconfont icon-meihua"></text>
-          <view class="u-line-1">精绘</view>
-        </view>
-      </view>
       <view class="right">
         <button @click="redraw">画同款</button>
       </view>
@@ -115,10 +109,6 @@ export default {
     // #endif
 
     this.getPicDetail()
-    // this.eventChannel.emit('onImageGenerated', {
-    //   uuid: this.uuid,
-    //   image: this.image,
-    // })
   },
   methods: {
     getPicDetail() {
@@ -158,10 +148,19 @@ export default {
     },
     likePic() {
       this.isLike = !this.isLike
-
+      if (this.isLike) {
+        this.likeCount++
+      } else {
+        this.likeCount--
+      }
       // 防抖
       this.$u.debounce(() => {
         // 请求
+
+        this.eventChannel.emit('onClickLike', {
+          uuid: this.uuid,
+          likeCount: this.likeCount,
+        })
       }, 500)
     },
   }
@@ -215,6 +214,7 @@ export default {
     .title {
       font-size: 32rpx;
       margin-bottom: 20rpx;
+      color: #e0e0e0;
     }
 
     .info {
@@ -233,6 +233,7 @@ export default {
         .nickname {
           margin-left: 8rpx;
           font-size: 28rpx;
+          color: #e0e0e0;
         }
       }
 
@@ -241,7 +242,7 @@ export default {
         align-items: center;
         margin-left: auto;
         font-size: 34rpx;
-        color: #969696;
+        color: #e0e0e0;
 
         .item {
           display: flex;
@@ -250,6 +251,12 @@ export default {
 
           .icon {
             font-size: 38rpx;
+            margin-right: 8rpx;
+          }
+
+          .t-icon {
+            width: 38rpx;
+            height: 38rpx;
             margin-right: 8rpx;
           }
 

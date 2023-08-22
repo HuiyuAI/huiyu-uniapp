@@ -28,7 +28,7 @@
           <u-icon name="question-circle" @click="tipsPoint(1)"></u-icon>
         </view>
         <view class="value">
-          <view class="t-icon t-icon-jiangbei"></view>
+          <view class="t-icon t-icon-point"></view>
           <span>{{ userInfo.dailyPoint }}</span>
         </view>
       </view>
@@ -39,7 +39,7 @@
           <u-icon name="question-circle" @click="tipsPoint(2)"></u-icon>
         </view>
         <view class="value">
-          <view class="t-icon t-icon-jiangbei"></view>
+          <view class="t-icon t-icon-point"></view>
           <span>{{ userInfo.point }}</span>
         </view>
       </view>
@@ -61,7 +61,7 @@
             <view class="desc">{{ item.desc }}</view>
           </view>
           <view class="task-content__item-point">
-            <view class="t-icon t-icon-jiangbei"></view>
+            <view class="t-icon t-icon-point"></view>
             <span>{{ `+${item.point}` }}</span>
           </view>
           <view class="task-content__item-right finished" v-if="item.status">{{ item.action }}</view>
@@ -95,7 +95,7 @@ export default {
       },
       commonColumns: [
         {name: '积分记录', icon: 'icon-ic_batch_default24px', page: '/pages/record/index'},
-        {name: '邀请好友', icon: 'icon-appreciate_light'},
+        {name: '邀请好友', icon: 'icon-fenxiang'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
       ],

@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="header">
-      <view class="image-box" v-if="status === 'GENERATED'" :style="{paddingBottom: aspectRatio + '%'}">
+      <view class="image-box" v-if="isGeneratedStatus" :style="{paddingBottom: aspectRatio + '%'}">
         <view class="image">
           <u-image :src="image" @click="previewImage" @error="imgLoadError" :show-menu-by-longpress="false"
                    bg-color="transparent" :show-loading="false" :show-error="false" :lazy-load="false" mode="widthFix"></u-image>
@@ -16,7 +16,7 @@
     </view>
 
     <view class="content">
-      <view class="action">
+      <view class="action" v-if="isGeneratedStatus">
         <view class="left">
           <view class="date">
             <span class="label">生成时间：</span>
@@ -46,7 +46,7 @@
     <view class="safe-area"></view>
 
     <view class="footer">
-      <view class="left">
+      <view class="left" v-if="isGeneratedStatus">
         <view class="item" @click="$u.throttle(saveImage, 3000)">
           <text class="iconfont icon-xiazai"></text>
           <view class="u-line-1">下载</view>
@@ -77,6 +77,9 @@
           <view class="item-input">
             <input v-model="shareTitle" type="text" maxlength="20" @input="" placeholder="请输入作品标题"/>
           </view>
+        </view>
+        <view class="share-form__item">
+          <view class="item-tips">Tips: 建议提升作品分辨率后投稿，质量过低的作品可能被审核拒绝发布哦~</view>
         </view>
 
         <view class="share-form__footer">
@@ -149,10 +152,8 @@ export default {
           return '审核中'
         case 'PUBLIC':
           return '已公开'
-        case 'NO_PASS':
-          return '未通过'
-        default:
-          return '投稿中'
+        case 'REJECT':
+          return '审核未通过'
       }
     },
     content() {
@@ -168,7 +169,10 @@ export default {
         {label: '随机种子', value: this.seed},
         {label: '图片ID', value: this.uuid},
       ]
-    }
+    },
+    isGeneratedStatus() {
+      return this.status === 'GENERATED'
+    },
   },
   onLoad(option) {
     this.uuid = option.id
@@ -217,6 +221,7 @@ export default {
         this.cfg = res.cfg
         this.seed = res.seed || ''
         this.modelId = res.modelId
+        this.shareStatus = res.shareStatus
       })
     },
     imgLoadError() {
@@ -385,6 +390,7 @@ export default {
     display: flex;
     padding: 20rpx 0;
     border-bottom: 1rpx solid #555555;
+    margin-bottom: 20rpx;
 
     .left {
       display: flex;
@@ -427,8 +433,6 @@ export default {
   }
 
   .pic-detail {
-    margin-top: 20rpx;
-
     .item {
       font-size: 28rpx;
       line-height: 40rpx;
@@ -510,6 +514,12 @@ export default {
     .item-input {
       margin: 10rpx 20rpx;
       border-bottom: 1px solid;
+    }
+
+    .item-tips {
+      margin: 30rpx 20rpx 0;
+      font-size: 24rpx;
+      color: #555555;
     }
   }
 

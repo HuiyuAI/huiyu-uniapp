@@ -142,6 +142,29 @@ export default {
       const query = this.$u.queryParams(item)
       uni.navigateTo({
         url: `/pages/share/index${query}`,
+        events: {
+          // 监听在子页面中点赞事件
+          onClickLike: (data) => {
+            const {uuid, likeCount} = data
+            const index1 = this.list1.findIndex(item => item.id === uuid)
+            if (index1 !== -1) {
+              this.list1[index1].likeCount = likeCount
+              return
+            }
+
+            const index2 = this.list2.findIndex(item => item.id === uuid)
+            if (index2 !== -1) {
+              this.list2[index2].likeCount = likeCount
+              return
+            }
+
+            const index3 = this.list3.findIndex(item => item.id === uuid)
+            if (index3 !== -1) {
+              this.list3[index3].likeCount = likeCount
+              return
+            }
+          },
+        }
       })
     },
   }
