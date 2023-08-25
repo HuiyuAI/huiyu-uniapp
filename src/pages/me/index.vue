@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="user-box" @click="$u.throttle(getUserProfile, 1000)">
+    <view class="user-box" @click="$u.throttle(login, 1000)">
       <view class="u-flex">
         <view class="u-m-r-20">
           <image :src="userInfo.avatar" class="user-avatar" mode="aspectFill"></image>
@@ -70,7 +70,6 @@
       </view>
     </view>
 
-    <u-top-tips ref="uTips"></u-top-tips>
     <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
   </view>
 </template>
@@ -144,50 +143,42 @@ export default {
         point: 0,
       }
     },
-    getUserProfile() {
+    async login() {
       if (this.userInfo.userId !== 0) {
         return
       }
-      // 获取用户信息
-      uni.getUserProfile({
-        desc: '需要获取权限',
-        success: async (res) => {
-          let data = {
-            iv: res.iv,
-            encryptedData: res.encryptedData,
+
+      uni.showLoading({
+        title: '正在登录...',
+        mask: true
+      })
+
+      let data = {}
+      // 获取code
+      data.code = await new Promise((resolve, reject) => {
+        uni.login({
+          provider: 'weixin',
+          success: (loginRes) => {
+            resolve(loginRes.code)
+          },
+          fail: (err) => {
+            reject(err)
           }
+        })
+      })
 
-          // 获取code
-          data.code = await new Promise((resolve, reject) => {
-            uni.login({
-              provider: 'weixin',
-              success: (loginRes) => {
-                resolve(loginRes.code)
-              },
-              fail: (err) => {
-                reject(err)
-              }
-            })
-          })
+      // 保存用户信息和token
+      login(data).then(res => {
+        uni.setStorageSync('access_token', res.access_token)
+        uni.setStorageSync('refresh_token', res.refresh_token)
+        // access_token到期时间
+        uni.setStorageSync('access_token_expires_at', ~~(Date.now() / 1000) + res.expires_in)
+        // refresh_token到期时间
+        const refreshTokenPayload = parseJwtPayload2Obj(res.refresh_token)
+        uni.setStorageSync('refresh_token_expires_at', refreshTokenPayload.exp)
+        this.getMyUserInfo()
 
-          // 保存用户信息和token
-          login(data).then(res => {
-            uni.setStorageSync('access_token', res.access_token)
-            uni.setStorageSync('refresh_token', res.refresh_token)
-            // access_token到期时间
-            uni.setStorageSync('access_token_expires_at', ~~(Date.now() / 1000) + res.expires_in)
-            // refresh_token到期时间
-            const refreshTokenPayload = parseJwtPayload2Obj(res.refresh_token)
-            uni.setStorageSync('refresh_token_expires_at', refreshTokenPayload.exp)
-            this.getMyUserInfo()
-          })
-        },
-        fail: () => {
-          this.$refs.uTips.show({
-            title: '需要获取权限才能继续',
-            type: 'warning'
-          })
-        }
+        uni.hideLoading()
       })
     },
     getMyUserInfo() {
