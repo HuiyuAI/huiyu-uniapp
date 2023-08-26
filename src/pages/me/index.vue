@@ -108,12 +108,6 @@ export default {
       tipsPointModelContent: '',
     }
   },
-  onLoad() {
-    if (!this.isLogin()) {
-      return
-    }
-    this.checkUserInfo()
-  },
   onShow() {
     if (!this.isLogin()) {
       this.initLogoutUserInfo()
@@ -123,16 +117,8 @@ export default {
   },
   methods: {
     isLogin() {
-      const userInfo = uni.getStorageSync('userInfo')
-      return userInfo ? true : false
-    },
-    checkUserInfo() {
-      const userInfo = uni.getStorageSync('userInfo')
-      if (userInfo) {
-        this.userInfo = userInfo
-      } else {
-        this.initLogoutUserInfo()
-      }
+      const accessToken = uni.getStorageSync('access_token')
+      return accessToken ? true : false
     },
     initLogoutUserInfo() {
       this.userInfo = {
@@ -184,7 +170,6 @@ export default {
     getMyUserInfo() {
       getMyUserInfo().then(res => {
         this.userInfo = res
-        uni.setStorageSync('userInfo', this.userInfo)
       })
     },
     tipsPoint(index) {
@@ -294,13 +279,6 @@ export default {
     padding: 0 20rpx;
     border-radius: 10rpx;
     background: #1a1a1a;
-
-    &.empty {
-      min-height: 180rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
 
     &__item {
       display: flex;

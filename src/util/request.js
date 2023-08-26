@@ -78,10 +78,6 @@ request.interceptors.request.use(config => {
             isRefreshing = true
             //刷新token
             refreshToken(uni.getStorageSync('refresh_token')).then(res => {
-              const userInfo = (
-                  ({userId, openid, nickname, avatar}) => ({userId, openid, nickname, avatar})
-              )(res)
-              uni.setStorageSync('userInfo', userInfo)
               uni.setStorageSync('access_token', res.access_token)
               uni.setStorageSync('refresh_token', res.refresh_token)
               //access_token到期时间
