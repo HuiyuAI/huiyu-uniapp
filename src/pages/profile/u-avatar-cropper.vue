@@ -25,7 +25,7 @@
           id="targetId"
       ></canvas>
     </view>
-    <view class="cropper-buttons safe-area-padding" :style="{ height: bottomNavHeight + 'px' }">
+    <view class="cropper-buttons safe-area-inset-bottom" :style="{ height: bottomNavHeight + 'px' }">
       <!-- #ifdef H5 -->
       <view class="upload" @tap="uploadTap">选择图片</view>
       <!-- #endif -->
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       // 底部导航的高度
-      bottomNavHeight: 50,
+      bottomNavHeight: 80,
       originWidth: 200,
       width: 0,
       height: 0,
