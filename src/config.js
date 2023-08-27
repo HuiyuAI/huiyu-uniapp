@@ -49,4 +49,22 @@ module.exports = {
     {title: '超清', val: 2, selected: false},
     {title: '超高清4K', val: 3, selected: false},
   ],
+
+  /**
+   * @type {number}
+   * @description 描述词最大输入长度
+   */
+  promptMaxInput: 1000,
+
+  /**
+   * @type {number}
+   * @description 昵称最大输入长度
+   */
+  nicknameMaxInput: 8,
+
+  /**
+   * @type {number}
+   * @description 投稿标题最大输入长度
+   */
+  shareTitleMaxInput: 20,
 };

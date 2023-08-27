@@ -131,6 +131,7 @@ export default {
     },
     async login() {
       if (this.userInfo.userId !== 0) {
+        this.toProfile()
         return
       }
 
@@ -186,6 +187,17 @@ export default {
           url: item.page
         })
       }
+    },
+    toProfile() {
+      const data = {
+        userId: this.userInfo.userId,
+        nickname: this.userInfo.nickname,
+        avatar: this.userInfo.avatar,
+      }
+      const query = this.$u.queryParams(data)
+      uni.navigateTo({
+        url: `/pages/profile/index${query}`,
+      })
     },
   }
 }

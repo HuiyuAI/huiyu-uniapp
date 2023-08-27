@@ -88,6 +88,18 @@
       "style": {
         "navigationBarTitleText": "积分记录"
       }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人信息"
+      }
+    },
+    {
+      "path": "pages/profile/u-avatar-cropper",
+      "style": {
+        "navigationBarTitleText": "头像裁剪"
+      }
     }
   ],
   "condition": {
@@ -108,6 +120,10 @@
       {
         "name": "square",
         "path": "pages/square/index"
+      },
+      {
+        "name": "profile",
+        "path": "pages/profile/index"
       }
     ]
   }

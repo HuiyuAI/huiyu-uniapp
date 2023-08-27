@@ -17,3 +17,13 @@ export function pagePointRecord(pageNum, pageSize) {
     }
   })
 }
+
+export function updateNickname(nickname) {
+  return axios({
+    url: `/service/user/updateNickname`,
+    method: 'POST',
+    params: {
+      nickname
+    }
+  })
+}
