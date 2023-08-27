@@ -75,11 +75,12 @@
         <view class="share-form__item">
           <view class="item-title">作品标题（选填）</view>
           <view class="item-input">
-            <input v-model="shareTitle" type="text" maxlength="20" @input="" placeholder="请输入作品标题"/>
+            <input v-model="shareTitle" type="text" maxlength="20" placeholder="请输入作品标题"/>
           </view>
+          <view class="item-input-tips">{{ shareTitle.length }}/{{ shareTitleMaxInput }}</view>
         </view>
         <view class="share-form__item">
-          <view class="item-tips">Tips: 建议提升作品分辨率后投稿，质量过低的作品可能被审核拒绝发布哦~</view>
+          <view class="item-tips">Tips: 审核通过后会有积分奖励，建议提升作品分辨率后投稿，质量过低的作品可能被审核拒绝发布哦~</view>
         </view>
 
         <view class="share-form__footer">
@@ -97,7 +98,7 @@
 <script>
 import {getPicDetail, share} from "@/api/pic";
 import {restoreFace} from "@/api/sd";
-import {restoreFacePoint} from "@/config"
+import {restoreFacePoint, shareTitleMaxInput} from "@/config"
 
 export default {
   data() {
@@ -126,6 +127,7 @@ export default {
       shareTitle: '',
       sharePicLoading: false,
       restoreFacePoint,
+      shareTitleMaxInput,
     }
   },
   computed: {
@@ -513,7 +515,15 @@ export default {
 
     .item-input {
       margin: 10rpx 20rpx;
+      padding-bottom: 2px;
       border-bottom: 1px solid;
+    }
+
+    .item-input-tips {
+      color: #aaa;
+      font-size: 24rpx;
+      margin: 10rpx 20rpx;
+      text-align: right;
     }
 
     .item-tips {

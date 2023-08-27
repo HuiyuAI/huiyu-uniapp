@@ -8,11 +8,11 @@
           <view class="title-desc">(建议以推荐词为基础修改)</view>
         </view>
         <view class="text-area">
-          <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="maxInput" auto-height
+          <textarea v-model="formData.prompt" :show-confirm-bar="false" :maxlength="promptMaxInput" auto-height
                     placeholder="输入你想要的内容，短语单词为佳，支持中英文。请勿输入萝莉、性感、血腥等内容，检测违规后将不返还积分哦。"></textarea>
         </view>
         <view class="text-num-box">
-          <view>{{ promptNum }}/{{ maxInput }}</view>
+          <view>{{ formData.prompt.length }}/{{ promptMaxInput }}</view>
         </view>
       </view>
       <view class="recommended-word-box">
@@ -87,11 +87,11 @@
             <view class="title-desc">(负向描述词)</view>
           </view>
           <view class="text-area">
-            <textarea v-model="formData.negativePrompt" :show-confirm-bar="false" :maxlength="maxInput" auto-height
+            <textarea v-model="formData.negativePrompt" :show-confirm-bar="false" :maxlength="promptMaxInput" auto-height
                       placeholder="输入你不想要的内容，短语单词为佳，支持中英文，用逗号分割。"></textarea>
           </view>
           <view class="text-num-box">
-            <view>{{ negativePromptNum }}/{{ maxInput }}</view>
+            <view>{{ formData.negativePrompt.length }}/{{ promptMaxInput }}</view>
           </view>
         </view>
         <!-- 描述词相关度 -->
@@ -127,7 +127,7 @@
 
 <script>
 import {getModelList, txt2img} from "@/api/sd";
-import {sizeList, countList, qualityList} from "@/config";
+import {sizeList, countList, qualityList, promptMaxInput} from "@/config";
 
 export default {
   name: 'Draw',
@@ -146,23 +146,13 @@ export default {
       },
       point: 2,
       modelList: [],
-      promptNum: 0,
-      negativePromptNum: 0,
-      maxInput: 500,
       enableAdvanced: false,
       seed: null,
       sizeList,
       countList,
       qualityList,
+      promptMaxInput,
     }
-  },
-  watch: {
-    'formData.prompt'(n, o) {
-      this.promptNum = n.length
-    },
-    'formData.negativePrompt'(n, o) {
-      this.negativePromptNum = n.length
-    },
   },
   created() {
     this.getModelList()
