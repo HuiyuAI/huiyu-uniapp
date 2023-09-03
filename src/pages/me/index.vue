@@ -64,8 +64,12 @@
             <view class="t-icon t-icon-point"></view>
             <span>{{ `+${item.point}` }}</span>
           </view>
-          <view class="task-content__item-right finished" v-if="item.status">{{ item.action }}</view>
-          <view class="task-content__item-right unfinished" v-else @click="toTab(item)">{{ item.action }}</view>
+          <view class="task-content__item-right finished" v-if="item.status">
+            <view class="task-content__item-right-text">{{ item.action }}</view>
+          </view>
+          <view class="task-content__item-right unfinished" v-else @click="toTab(item)">
+            <view class="task-content__item-right-text">{{ item.action }}</view>
+          </view>
         </view>
       </view>
     </view>
@@ -99,10 +103,11 @@ export default {
         {name: '邀请好友', icon: 'icon-fenxiang'},
       ],
       dailyTaskList: [
-        {title: '每日登录', desc: '进度(0/1)', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
-        {title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
-        {title: '投稿作品', desc: '进度(0/3)', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
-        {title: '完成创作', desc: '进度(0/5)', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
+        {key: 'signIn', title: '每日签到', desc: '进度(0/1)', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
+        {key: 'generatePic', title: '完成创作', desc: '进度(0/5)', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
+        {key: 'sharePic', title: '投稿作品', desc: '进度(0/3)', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'sharePass', title: '投稿通过', desc: '', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'inviteUser', title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
@@ -171,11 +176,21 @@ export default {
     getMyUserInfo() {
       getMyUserInfo().then(res => {
         this.userInfo = res
+        this.dailyTaskList = this.dailyTaskList.map(item => {
+          const resItem = res.dailyTaskList.find(resItem => resItem.key === item.key)
+          if (resItem) {
+            item.desc = resItem.desc
+            item.status = resItem.status
+            item.point = resItem.point
+            item.action = resItem.action
+            return item
+          }
+        })
       })
     },
     tipsPoint(index) {
       if (index === 1) {
-        this.tipsPointModelContent = `每日赠送：每天0点自动补充至${dailyPointGive}，当天24点过期`
+        this.tipsPointModelContent = `每日赠送：每天登录后自动补充至${dailyPointGive}，当天24点过期`
       } else if (index === 2) {
         this.tipsPointModelContent = '永久积分：无过期时间，永久可用'
       }
@@ -340,6 +355,8 @@ export default {
         padding: 10rpx 20rpx;
         border: 1rpx solid $huiyu-color-main;
         border-radius: 10rpx;
+        min-width: 120rpx;
+        justify-content: center;
 
         &.finished {
           color: $huiyu-color-main;
@@ -348,6 +365,10 @@ export default {
         &.unfinished {
           color: black;
           background: $huiyu-color-button;
+        }
+
+        &-text {
+          text-align: center;
         }
       }
     }
