@@ -57,13 +57,16 @@
       <view class="task-content">
         <view class="task-content__item" v-for="(item,index) in dailyTaskList" :key="index">
           <view :class="['task-content__item-left', item.desc ? '' : 'no-desc']">
-            <view>{{ item.title }}</view>
+            <view class="title">
+              <text>{{ item.title }}</text>
+              <view class="point">
+                <view class="t-icon t-icon-point"></view>
+                <span>{{ `+${item.point}` }}</span>
+              </view>
+            </view>
             <view class="desc">{{ item.desc }}</view>
           </view>
-          <view class="task-content__item-point">
-            <view class="t-icon t-icon-point"></view>
-            <span>{{ `+${item.point}` }}</span>
-          </view>
+
           <view class="task-content__item-right finished" v-if="item.status">
             <view class="task-content__item-right-text">{{ item.action }}</view>
           </view>
@@ -80,10 +83,9 @@
 
 <script>
 import {login} from "@/api/login";
-import {getMyUserInfo} from "@/api/user";
+import {getDailyTaskPoint, getMyUserInfo} from "@/api/user";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
-import {dailyPointGive} from "@/config";
 
 export default {
   components: {Card},
@@ -102,16 +104,40 @@ export default {
         {name: '邀请好友', icon: 'icon-fenxiang'},
         {name: '邀请好友', icon: 'icon-fenxiang'},
       ],
-      dailyTaskList: [
-        {key: 'signIn', title: '每日签到', desc: '进度(0/1)', point: `${dailyPointGive} (当日过期)`, status: true, action: '已完成', page: ''},
-        {key: 'generatePic', title: '完成创作', desc: '进度(0/5)', point: '10', status: false, action: '去创作', page: '/pages/index/index'},
-        {key: 'sharePic', title: '投稿作品', desc: '进度(0/3)', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
-        {key: 'sharePass', title: '投稿通过', desc: '', point: '30', status: false, action: '去投稿', page: '/pages/pic/index'},
-        {key: 'inviteUser', title: '邀请好友', desc: '', point: '200', status: false, action: '去邀请', page: ''},
+      dailyTaskPointList: {
+        signIn: 100,
+        generatePic: 10,
+        sharePic: 10,
+        sharePass: 5,
+        inviteUser: 100,
+      },
+      dailyTaskListTmp: [
+        {key: 'signIn', title: '每日签到', desc: '', point: '', status: false, action: '未完成', page: ''},
+        {key: 'generatePic', title: '完成创作', desc: '', point: '', status: false, action: '去创作', page: '/pages/index/index'},
+        {key: 'sharePic', title: '投稿作品', desc: '', point: '', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'sharePass', title: '投稿通过', desc: '', point: '', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'inviteUser', title: '邀请好友', desc: '', point: '', status: false, action: '去邀请', page: ''},
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
     }
+  },
+  computed: {
+    dailyTaskList: {
+      get() {
+        this.dailyTaskListTmp.map(item => {
+          const point = this.dailyTaskPointList[item.key]
+          item.point = `${point}${item.key === 'signIn' ? ' (当日过期)' : ''}`
+        })
+        return this.dailyTaskListTmp
+      },
+      set(val) {
+        this.dailyTaskListTmp = val
+      }
+    }
+  },
+  onLoad() {
+    this.getDailyTaskPoint()
   },
   onShow() {
     if (!this.isLogin()) {
@@ -121,6 +147,11 @@ export default {
     this.getMyUserInfo()
   },
   methods: {
+    getDailyTaskPoint() {
+      getDailyTaskPoint().then(res => {
+        this.dailyTaskPointList = res
+      })
+    },
     isLogin() {
       const accessToken = uni.getStorageSync('access_token')
       return accessToken ? true : false
@@ -133,6 +164,13 @@ export default {
         dailyPoint: 0,
         point: 0,
       }
+      this.dailyTaskList = [
+        {key: 'signIn', title: '每日签到', desc: '', point: '', status: false, action: '未完成', page: ''},
+        {key: 'generatePic', title: '完成创作', desc: '', point: '', status: false, action: '去创作', page: '/pages/index/index'},
+        {key: 'sharePic', title: '投稿作品', desc: '', point: '', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'sharePass', title: '投稿通过', desc: '', point: '', status: false, action: '去投稿', page: '/pages/pic/index'},
+        {key: 'inviteUser', title: '邀请好友', desc: '', point: '', status: false, action: '去邀请', page: ''},
+      ]
     },
     async login() {
       if (this.userInfo.userId !== 0) {
@@ -181,16 +219,15 @@ export default {
           if (resItem) {
             item.desc = resItem.desc
             item.status = resItem.status
-            item.point = resItem.point
             item.action = resItem.action
-            return item
           }
+          return item
         })
       })
     },
     tipsPoint(index) {
       if (index === 1) {
-        this.tipsPointModelContent = `每日赠送：每天登录后自动补充至${dailyPointGive}，当天24点过期`
+        this.tipsPointModelContent = `每日赠送：每天登录后自动补充至${this.dailyTaskPointList.signIn}，当天24点过期`
       } else if (index === 2) {
         this.tipsPointModelContent = '永久积分：无过期时间，永久可用'
       }
@@ -321,7 +358,26 @@ export default {
 
       &-left {
         margin-left: 20rpx;
-        font-size: 28rpx;
+
+        .title {
+          display: flex;
+          font-size: 28rpx;
+          align-items: center;
+
+          .point {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 20rpx;
+            margin-right: auto;
+            font-size: 24rpx;
+
+            .t-icon {
+              width: 28rpx;
+              height: 28rpx;
+              margin-right: 4rpx;
+            }
+          }
+        }
 
         .desc {
           padding-top: 4rpx;
@@ -332,20 +388,6 @@ export default {
         &.no-desc {
           display: flex;
           align-items: center;
-        }
-      }
-
-      &-point {
-        display: flex;
-        align-items: center;
-        margin-left: 20rpx;
-        margin-right: auto;
-        font-size: 24rpx;
-
-        .t-icon {
-          width: 28rpx;
-          height: 28rpx;
-          margin-right: 4rpx;
         }
       }
 

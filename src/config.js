@@ -7,12 +7,6 @@ module.exports = {
 
   /**
    * @type {number}
-   * @description 每日赠送积分数量
-   */
-  dailyPointGive: 100,
-
-  /**
-   * @type {number}
    * @description 修脸消耗点数
    */
   restoreFacePoint: 2,

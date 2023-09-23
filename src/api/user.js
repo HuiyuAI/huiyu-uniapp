@@ -27,3 +27,10 @@ export function updateNickname(nickname) {
     }
   })
 }
+
+export function getDailyTaskPoint() {
+  return axios({
+    url: `/service/user/getDailyTaskPoint`,
+    method: 'GET',
+  })
+}
