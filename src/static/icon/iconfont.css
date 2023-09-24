@@ -13,6 +13,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-yaoqing:before {
+  content: "\e65e";
+}
+
+.icon-jiludanzilishijilu:before {
+  content: "\e61b";
+}
+
+.icon-yaoqinghaoyou:before {
+  content: "\e7d9";
+}
+
+.icon-gift:before {
+  content: "\e63c";
+}
+
 .icon-palette:before {
   content: "\e608";
 }

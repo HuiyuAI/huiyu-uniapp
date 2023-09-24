@@ -7,18 +7,6 @@
 export default {
   onLaunch: function () {
     console.log('App Launch')
-
-    // uni.login({
-    //   provider: 'weixin',
-    //   success: function (loginRes) {
-    //     uni.request({
-    //       url: '',
-    //       success: (res) => {
-    //         console.log(res);
-    //       }
-    //     });
-    //   }
-    // });
   },
   onShow: function () {
     console.log('App Show')

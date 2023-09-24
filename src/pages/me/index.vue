@@ -46,7 +46,7 @@
     </view>
 
     <view class="grid-box">
-      <Card :columns="commonColumns"/>
+      <Card :columns="cardColumns" @card-column-clicked="handleCardColumnClick"/>
     </view>
 
     <view class="daily-task-title">
@@ -78,6 +78,14 @@
     </view>
 
     <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
+
+    <u-modal v-model="cdkeyModalShow" @confirm="useCdkey" async-close title="兑换码" confirm-text="确定" show-cancel-button negative-top="500rpx">
+      <view class="cdkey-modal-slot">
+        <view class="input">
+          <input v-model="cdkey" type="text" placeholder="请输入兑换码" :adjust-position="true"/>
+        </view>
+      </view>
+    </u-modal>
   </view>
 </template>
 
@@ -98,11 +106,11 @@ export default {
         dailyPoint: 0,
         point: 0,
       },
-      commonColumns: [
-        {name: '积分记录', icon: 'icon-ic_batch_default24px', page: '/pages/record/index'},
-        {name: '邀请好友', icon: 'icon-fenxiang'},
-        {name: '邀请好友', icon: 'icon-fenxiang'},
-        {name: '邀请好友', icon: 'icon-fenxiang'},
+      cardColumns: [
+        {name: '积分记录', icon: 'icon-jiludanzilishijilu', click: 'clickPointRecord'},
+        {name: '邀请好友', icon: 'icon-yaoqing', click: 'clickInviteFriends'},
+        {name: '邀请码', icon: 'icon-yaoqinghaoyou', click: 'clickInviteCode'},
+        {name: '兑换码', icon: 'icon-gift', click: 'clickCDKey'},
       ],
       dailyTaskPointList: {
         signIn: 100,
@@ -120,6 +128,8 @@ export default {
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
+      cdkeyModalShow: false,
+      cdkey: '',
     }
   },
   computed: {
@@ -250,6 +260,33 @@ export default {
       uni.navigateTo({
         url: `/pages/profile/index${query}`,
       })
+    },
+    handleCardColumnClick(item) {
+      this[item.click]()
+    },
+    clickPointRecord() {
+      uni.navigateTo({
+        url: '/pages/record/index'
+      })
+    },
+    clickInviteFriends() {
+
+    },
+    clickInviteCode() {
+
+    },
+    clickCDKey() {
+      this.cdkeyModalShow = true
+    },
+    useCdkey() {
+      setTimeout(() => {
+        this.cdkeyModalShow = false
+        uni.showToast({
+          title: '兑换码错误',
+          icon: 'none',
+          duration: 2000
+        })
+      }, 1000)
     },
   }
 }
@@ -414,6 +451,16 @@ export default {
         }
       }
     }
+  }
+}
+
+.cdkey-modal-slot {
+  padding: 40rpx 30rpx;
+
+  .input {
+    color: #000000;
+    padding-bottom: 2px;
+    border-bottom: 1px solid;
   }
 }
 </style>

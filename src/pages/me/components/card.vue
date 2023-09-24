@@ -1,7 +1,7 @@
 <template>
   <view class="user-center-card">
     <view class="user-center-card__content">
-      <view class="user-center-card__item" @click="clickItem(item)" v-for="(item,index) in columns" :key="index">
+      <view class="user-center-card__item" @click="handleClick(item)" v-for="(item,index) in columns" :key="index">
         <text :class="['iconfont', item.icon]"/>
         <text>{{ item.name }}</text>
       </view>
@@ -16,11 +16,9 @@ export default {
     columns: Array,
   },
   methods: {
-    clickItem(item) {
-      if (item.page) {
-        uni.navigateTo({
-          url: item.page
-        })
+    handleClick(item) {
+      if (item.click) {
+        this.$emit('card-column-clicked', item)
       }
     },
   }

@@ -120,8 +120,6 @@
 
       <view class="safe-area"></view>
     </scroll-view>
-
-    <u-toast ref="uToast"/>
   </view>
 </template>
 
@@ -292,9 +290,9 @@ export default {
      */
     clickSubmit() {
       if (!this.formData.prompt) {
-        this.$refs.uToast.show({
+        uni.showToast({
           title: '请输入画面描述',
-          type: 'default',
+          icon: 'none'
         })
         return
       }
