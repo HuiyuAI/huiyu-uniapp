@@ -502,6 +502,10 @@ export default {
 
       .ratio-sel {
         border: 4rpx solid $huiyu-color-main;
+
+        .item-shape {
+          background-color: $huiyu-color-main !important;
+        }
       }
     }
   }
