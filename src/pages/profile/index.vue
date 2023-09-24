@@ -94,33 +94,36 @@ export default {
           title: '正在上传头像中...',
           mask: true
         })
-      }, 400)
+      }, 500)
 
-      uni.uploadFile({
-        url: `${baseServerUrl}/service/user/updateAvatar`,
-        header: {
-          Authorization: `Bearer ${uni.getStorageSync('access_token')}`
-        },
-        filePath: path,
-        name: 'file',
-        complete: (res) => {
-          uni.hideLoading()
+      setTimeout(() => {
+        uni.uploadFile({
+          url: `${baseServerUrl}/service/user/updateAvatar`,
+          header: {
+            Authorization: `Bearer ${uni.getStorageSync('access_token')}`
+          },
+          filePath: path,
+          name: 'file',
+          complete: (res) => {
+            uni.hideLoading()
 
-          res = JSON.parse(res.data)
-          if (res.code !== 200) {
-            uni.showToast({
-              title: res.msg || '上传失败',
-              icon: 'none'
-            })
-          } else {
-            this.getMyUserInfo()
-            uni.showToast({
-              title: '修改成功',
-              icon: 'none'
-            })
+            res = JSON.parse(res.data)
+            if (res.code !== 200) {
+              uni.showToast({
+                title: res.msg || '上传失败',
+                icon: 'none',
+                duration: 3000
+              })
+            } else {
+              this.getMyUserInfo()
+              uni.showToast({
+                title: '修改成功',
+                icon: 'none'
+              })
+            }
           }
-        }
-      })
+        })
+      }, 800)
     },
     updateNickname() {
       updateNickname(this.newNickname).then(res => {
