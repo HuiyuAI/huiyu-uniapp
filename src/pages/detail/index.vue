@@ -91,7 +91,7 @@
 
     <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" async-close title="修脸" :confirm-text="`确定(消耗${restoreFacePoint}积分)`" content="针对脸部智能重绘修复，适用于远景中的模糊人脸，将会生成一张新图，风景类场景无效请勿使用" show-cancel-button></u-modal>
     <u-modal v-model="superResolutionModalShow" @confirm="superResolution" async-close title="超分辨率4K" :confirm-text="`确定(消耗${superResolutionPoint}积分)`" content="对当前1080P图片AI超分辨率至4K，提升画质和清晰度" show-cancel-button></u-modal>
-    <u-modal v-model="superResolutionNonsupportModalShow" confirm-text="确定" title="超分辨率4K" :content="`当前图片质量为【${quality}】，暂不支持该质量图片超分，请对【超清】质量图片使用`"></u-modal>
+    <u-modal v-model="superResolutionNonsupportModalShow" confirm-text="取消" title="超分辨率4K" :content="`当前图片质量为【${quality}】，暂不支持该功能，请对【超清】质量图片使用`"></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>
@@ -188,9 +188,7 @@ export default {
     this.width = option.originWidth
     this.height = option.originHeight
 
-    // #ifndef APP-NVUE
     this.eventChannel = this.getOpenerEventChannel()
-    // #endif
 
     // 查询图片详情，第一次立即执行
     this.getPicDetail()

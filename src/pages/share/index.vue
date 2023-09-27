@@ -104,9 +104,7 @@ export default {
     this.width = option.originWidth
     this.height = option.originHeight
 
-    // #ifndef APP-NVUE
     this.eventChannel = this.getOpenerEventChannel()
-    // #endif
 
     this.getPicDetail()
   },
