@@ -216,6 +216,7 @@ export default {
         // refresh_token到期时间
         const refreshTokenPayload = parseJwtPayload2Obj(res.refresh_token)
         uni.setStorageSync('refresh_token_expires_at', refreshTokenPayload.exp)
+        uni.setStorageSync('user_id', res.userId)
         this.getMyUserInfo()
 
         uni.hideLoading()

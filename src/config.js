@@ -67,4 +67,14 @@ module.exports = {
    * @description 投稿标题最大输入长度
    */
   shareTitleMaxInput: 20,
+
+  /**
+   * @type {Array}
+   * @description 分享小程序显示的图片url
+   */
+  shareAppImageUrlList: [
+    'https://huiyucdn.naccl.top/static/shareapp/1.jpg',
+    'https://huiyucdn.naccl.top/static/shareapp/2.jpg',
+    'https://huiyucdn.naccl.top/static/shareapp/3.jpg',
+  ],
 };

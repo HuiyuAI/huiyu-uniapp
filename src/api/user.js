@@ -34,3 +34,13 @@ export function getDailyTaskPoint() {
     method: 'GET',
   })
 }
+
+export function bindInviter(sharerUserId) {
+  return axios({
+    url: `/service/user/bindInviter`,
+    method: 'POST',
+    params: {
+      sharerUserId
+    }
+  })
+}
