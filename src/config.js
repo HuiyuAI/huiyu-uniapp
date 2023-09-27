@@ -73,8 +73,8 @@ module.exports = {
    * @description 分享小程序显示的图片url
    */
   shareAppImageUrlList: [
-    'https://huiyucdn.naccl.top/static/shareapp/1.jpg',
-    'https://huiyucdn.naccl.top/static/shareapp/2.jpg',
-    'https://huiyucdn.naccl.top/static/shareapp/3.jpg',
+    'https://huiyucdn.naccl.top/gen/ea3a58b6-a509-48ae-b632-c6ab57c18e05.jpg!/fw/360',
+    'https://huiyucdn.naccl.top/gen/19725c2d-4691-4ecc-9528-c7fa8cd27c9c.jpg!/fw/360',
+    'https://huiyucdn.naccl.top/gen/a0a70d6c-b241-46e6-8617-be821ee7c2cf.jpg!/fw/360',
   ],
 };
