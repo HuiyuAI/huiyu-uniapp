@@ -12,6 +12,12 @@ module.exports = {
   restoreFacePoint: 2,
 
   /**
+   * @type {number}
+   * @description 超分消耗点数
+   */
+  superResolutionPoint: 1,
+
+  /**
    * @type {Array}
    * @description 尺寸比例
    */

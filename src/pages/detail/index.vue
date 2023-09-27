@@ -55,7 +55,7 @@
           <text class="iconfont icon-xiulian"></text>
           <view class="u-line-1">修脸</view>
         </view>
-        <view class="item">
+        <view class="item" @click="$u.throttle(clickSuperResolution, 2000)">
           <text class="iconfont icon-k-line"></text>
           <view class="u-line-1">超分</view>
         </view>
@@ -90,6 +90,8 @@
     </u-popup>
 
     <u-modal v-model="restoreFaceModalShow" @confirm="restoreFace" async-close title="修脸" :confirm-text="`确定(消耗${restoreFacePoint}积分)`" content="针对脸部智能重绘修复，适用于远景中的模糊人脸，将会生成一张新图，风景类场景无效请勿使用" show-cancel-button></u-modal>
+    <u-modal v-model="superResolutionModalShow" @confirm="superResolution" async-close title="超分辨率4K" :confirm-text="`确定(消耗${superResolutionPoint}积分)`" content="对当前1080P图片AI超分辨率至4K，提升画质和清晰度" show-cancel-button></u-modal>
+    <u-modal v-model="superResolutionNonsupportModalShow" confirm-text="确定" title="超分辨率4K" :content="`当前图片质量为【${quality}】，暂不支持该质量图片超分，请对【超清】质量图片使用`"></u-modal>
     <u-modal v-model="albumPermissionRequest" @confirm="toOpenSetting" content="请先开启保存相册权限" show-cancel-button></u-modal>
     <u-toast ref="uToast"/>
   </view>
@@ -97,8 +99,8 @@
 
 <script>
 import {getPicDetail, share} from "@/api/pic";
-import {restoreFace} from "@/api/sd";
-import {restoreFacePoint, shareTitleMaxInput} from "@/config"
+import {restoreFace, superResolution} from "@/api/sd";
+import {shareTitleMaxInput, restoreFacePoint, superResolutionPoint} from "@/config"
 
 export default {
   data() {
@@ -128,6 +130,9 @@ export default {
       sharePicLoading: false,
       restoreFacePoint,
       shareTitleMaxInput,
+      superResolutionModalShow: false,
+      superResolutionNonsupportModalShow: false,
+      superResolutionPoint,
     }
   },
   computed: {
@@ -255,6 +260,20 @@ export default {
         this.toDetailPage(res)
       }).finally(() => {
         this.restoreFaceModalShow = false
+      })
+    },
+    clickSuperResolution() {
+      if (this.quality === '超清') {
+        this.superResolutionModalShow = true
+      } else {
+        this.superResolutionNonsupportModalShow = true
+      }
+    },
+    superResolution() {
+      superResolution({imageUuid: this.uuid}).then(res => {
+        this.toDetailPage(res)
+      }).finally(() => {
+        this.superResolutionModalShow = false
       })
     },
     clickShareButton() {

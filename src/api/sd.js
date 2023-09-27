@@ -26,3 +26,13 @@ export function restoreFace(data) {
     }
   })
 }
+
+export function superResolution(data) {
+  return axios({
+    url: '/service/sd/superResolution',
+    method: 'POST',
+    data: {
+      ...data
+    }
+  })
+}

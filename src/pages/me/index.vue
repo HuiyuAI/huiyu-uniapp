@@ -237,7 +237,7 @@ export default {
     },
     tipsPoint(index) {
       if (index === 1) {
-        this.tipsPointModelContent = `每日赠送：每天登录后自动补充至${this.dailyTaskPointList.signIn}，当天24点过期`
+        this.tipsPointModelContent = `每日赠送：每天登录后自动补充至${this.dailyTaskPointList.signIn}，当天24点过期，优先消耗每日赠送积分`
       } else if (index === 2) {
         this.tipsPointModelContent = '永久积分：无过期时间，永久可用'
       }
