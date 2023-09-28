@@ -79,6 +79,14 @@
 
     <u-modal v-model="tipsPointModelShow" confirm-text="确定" title="积分说明" :content="tipsPointModelContent"></u-modal>
 
+    <u-modal v-model="inviteCodeModalShow" @confirm="bindInviter" async-close title="邀请码" confirm-text="确定" show-cancel-button negative-top="500rpx">
+      <view class="invite-code-modal-slot">
+        <view class="input">
+          <input v-model="inviteCode" type="text" placeholder="请输入邀请码" :adjust-position="true"/>
+        </view>
+        <view class="tips">绑定邀请人后，双方都会收到{{ dailyTaskPointList.inviteUser }}积分奖励~</view>
+      </view>
+    </u-modal>
     <u-modal v-model="cdkeyModalShow" @confirm="useCdkey" async-close title="兑换码" confirm-text="确定" show-cancel-button negative-top="500rpx">
       <view class="cdkey-modal-slot">
         <view class="input">
@@ -91,7 +99,7 @@
 
 <script>
 import {login} from "@/api/login";
-import {getDailyTaskPoint, getMyUserInfo} from "@/api/user";
+import {bindInviter, getDailyTaskPoint, getMyUserInfo} from "@/api/user";
 import {parseJwtPayload2Obj} from "@/util/jwtUtils";
 import Card from "./components/card.vue"
 
@@ -128,6 +136,8 @@ export default {
       ],
       tipsPointModelShow: false,
       tipsPointModelContent: '',
+      inviteCodeModalShow: false,
+      inviteCode: '',
       cdkeyModalShow: false,
       cdkey: '',
     }
@@ -194,6 +204,9 @@ export default {
       })
 
       let data = {}
+      // 注册时绑定邀请人
+      data.inviterId = uni.getStorageSync('inviterId') || null
+
       // 获取code
       data.code = await new Promise((resolve, reject) => {
         uni.login({
@@ -217,6 +230,10 @@ export default {
         const refreshTokenPayload = parseJwtPayload2Obj(res.refresh_token)
         uni.setStorageSync('refresh_token_expires_at', refreshTokenPayload.exp)
         uni.setStorageSync('user_id', res.userId)
+
+        // 删除邀请人id缓存
+        uni.removeStorageSync('inviterId')
+
         this.getMyUserInfo()
 
         uni.hideLoading()
@@ -274,14 +291,24 @@ export default {
 
     },
     clickInviteCode() {
-
+      this.inviteCodeModalShow = true
     },
     clickCDKey() {
       this.cdkeyModalShow = true
     },
+    bindInviter() {
+      bindInviter(this.inviteCode).then(res => {
+        this.inviteCodeModalShow = false
+        uni.showToast({
+          title: res,
+          icon: 'none',
+          duration: 2000
+        })
+      })
+    },
     useCdkey() {
       setTimeout(() => {
-        this.cdkeyModalShow = false
+        // this.cdkeyModalShow = false
         uni.showToast({
           title: '兑换码错误',
           icon: 'none',
@@ -452,6 +479,16 @@ export default {
         }
       }
     }
+  }
+}
+
+.invite-code-modal-slot {
+  padding: 40rpx 30rpx;
+
+  .input {
+    color: #000000;
+    padding-bottom: 2px;
+    border-bottom: 1px solid;
   }
 }
 

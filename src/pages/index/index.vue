@@ -12,7 +12,6 @@
 <script>
 import Draw from "./components/draw.vue"
 import {shareAppImageUrlList} from '@/config'
-import {bindInviter} from "@/api/user";
 
 export default {
   components: {Draw},
@@ -22,10 +21,7 @@ export default {
     }
   },
   onLoad(option) {
-    const sharerUserId = option.sharerUserId
-    if (sharerUserId) {
-      this.autoBindInviter(sharerUserId)
-    }
+    this.saveBindInviterId(option.inviterId)
     this.getNoticeList()
   },
   onReady() {
@@ -35,7 +31,7 @@ export default {
     const imageUrl = shareAppImageUrlList[this.$u.random(0, shareAppImageUrlList.length - 1)]
 
     const userId = this.$store.state.app.userId
-    const query = userId ? `?sharerUserId=${userId}` : ''
+    const query = userId ? `?inviterId=${userId}` : ''
 
     return {
       title: '绘语AI免费使用啦，快来试试吧~',
@@ -49,14 +45,11 @@ export default {
     getNoticeList() {
       this.noticeList = []
     },
-    autoBindInviter(sharerUserId) {
-      console.log('autoBindInviter', sharerUserId)
-      bindInviter(sharerUserId).then(res => {
-        console.log('bindInviter', res)
-      }).catch(e => {
-        console.log(e)
-      })
-
+    saveBindInviterId(inviterId) {
+      if (!inviterId) return
+      if (this.$store.state.app.userId) return
+      if (uni.getStorageSync('inviterId')) return
+      uni.setStorageSync('inviterId', inviterId)
     },
   }
 }

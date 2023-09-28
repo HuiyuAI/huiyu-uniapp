@@ -35,12 +35,12 @@ export function getDailyTaskPoint() {
   })
 }
 
-export function bindInviter(sharerUserId) {
+export function bindInviter(inviterId) {
   return axios({
     url: `/service/user/bindInviter`,
     method: 'POST',
     params: {
-      sharerUserId
+      inviterId
     }
   })
 }

@@ -12,9 +12,7 @@ export function login(data) {
     params: {
       ...oauthClient,
       grant_type: 'wechat',
-      code: data.code,
-      iv: data.iv,
-      encryptedData: data.encryptedData
+      ...data,
     },
   })
 }
