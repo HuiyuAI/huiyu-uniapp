@@ -298,17 +298,20 @@ export default {
     },
     bindInviter() {
       bindInviter(this.inviteCode).then(res => {
-        this.inviteCodeModalShow = false
         uni.showToast({
           title: res,
           icon: 'none',
           duration: 2000
         })
+      }).finally(() => {
+        this.inviteCode = ''
+        this.inviteCodeModalShow = false
       })
     },
     useCdkey() {
       setTimeout(() => {
-        // this.cdkeyModalShow = false
+        this.cdkey = ''
+        this.cdkeyModalShow = false
         uni.showToast({
           title: '兑换码错误',
           icon: 'none',
@@ -489,6 +492,13 @@ export default {
     color: #000000;
     padding-bottom: 2px;
     border-bottom: 1px solid;
+  }
+
+  .tips {
+    color: #aaa;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+    text-align: right;
   }
 }
 
