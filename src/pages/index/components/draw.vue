@@ -224,6 +224,8 @@ export default {
       })
       item.selected = true
       this.formData.modelId = item.id
+      // 有个奇怪bug导致第二个模型选中时，并不会触发更新，需要点击其它模型再点击回来才会触发更新，所以这里强制更新
+      this.$forceUpdate()
     },
     /**
      * 随机推荐词
