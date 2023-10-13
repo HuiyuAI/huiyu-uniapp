@@ -75,6 +75,11 @@
     "usingComponents": true
   },
   "mp-toutiao": {
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
     "usingComponents": true
   },
   "mp-qq": {

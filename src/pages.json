@@ -14,7 +14,7 @@
   "tabBar": {
     "color": "#B3B3B3",
     "selectedColor": "#759EF0",
-    "borderStyle": "white",
+    "borderStyle": "black",
     "backgroundColor": "#1A1A1A",
     "list": [
       {
@@ -103,15 +103,15 @@
     }
   ],
   "condition": {
-    "current": 3,
+    "current": 0,
     "list": [
+      {
+        "name": "index",
+        "path": "pages/index/index"
+      },
       {
         "name": "pic",
         "path": "pages/pic/index"
-      },
-      {
-        "name": "detail",
-        "path": "pages/detail/index"
       },
       {
         "name": "me",
@@ -120,10 +120,6 @@
       {
         "name": "square",
         "path": "pages/square/index"
-      },
-      {
-        "name": "profile",
-        "path": "pages/profile/index"
       }
     ]
   }
