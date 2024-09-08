@@ -157,12 +157,6 @@ export default {
               this.list2[index2].likeCount = likeCount
               return
             }
-
-            const index3 = this.list3.findIndex(item => item.id === uuid)
-            if (index3 !== -1) {
-              this.list3[index3].likeCount = likeCount
-              return
-            }
           },
         }
       })
