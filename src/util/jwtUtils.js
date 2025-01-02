@@ -14,7 +14,7 @@ export function parseJwtPayload2Obj(jwt) {
 export function isAccessTokenExpires() {
   const accessTokenExpiresAt = uni.getStorageSync('access_token_expires_at')
   const now = ~~(Date.now() / 1000)
-  return accessTokenExpiresAt && now > accessTokenExpiresAt
+  return !accessTokenExpiresAt || now > accessTokenExpiresAt
 }
 
 /**
@@ -24,7 +24,7 @@ export function isAccessTokenExpires() {
 export function isRefreshTokenExpires() {
   const refreshTokenExpiresAt = uni.getStorageSync('refresh_token_expires_at')
   const now = ~~(Date.now() / 1000)
-  return refreshTokenExpiresAt && now > refreshTokenExpiresAt
+  return !refreshTokenExpiresAt || now > refreshTokenExpiresAt
 }
 
 /**
@@ -34,5 +34,5 @@ export function isRefreshTokenExpires() {
 export function isTimeToRefreshToken() {
   const refreshTokenExpiresAt = uni.getStorageSync('refresh_token_expires_at')
   const now = ~~(Date.now() / 1000)
-  return refreshTokenExpiresAt && isAccessTokenExpires() && refreshTokenExpiresAt > now
+  return !refreshTokenExpiresAt || (isAccessTokenExpires() && refreshTokenExpiresAt > now)
 }
